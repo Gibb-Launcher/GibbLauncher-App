@@ -1,60 +1,105 @@
 package gibblauncher.gibblauncherapp.controller
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.ActionMode
 import android.view.View
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import gibblauncher.gibblauncherapp.R
-import android.widget.LinearLayout
 import gibblauncher.gibblauncherapp.model.BounceLocation
 import java.util.*
+import android.annotation.SuppressLint
+import android.os.Handler
+import android.support.v4.content.ContextCompat
+import android.util.DisplayMetrics
+import android.widget.TextView
 
 
 class MainActivity : AppCompatActivity() {
-    private val myLocation = IntArray(2)
+    private var tableTennisLocation = IntArray(2)
+    private var screenWidth = 0
+    private var screenHeight = 0
+    private var isShow: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+        getScreenMetrics()
+>>>>>>> e7f8645... Adding bounce information in ball
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
 
-        val imageView = findViewById<ImageView>(R.id.table_tennis)
+        if (!isShow) {
+            val imageView = findViewById<ImageView>(R.id.table_tennis)
 
-        imageView.getLocationOnScreen(myLocation)
-        println(myLocation[0])
-        println(myLocation[1])
+            imageView.getLocationOnScreen(tableTennisLocation)
 
+            val hawkeyeLayout = findViewById<RelativeLayout>(R.id.hawkeye_result)
+            showBounceLocations(hawkeyeLayout)
+            setContentView(hawkeyeLayout)
+            this.isShow = true
+        }
 
-        val hawkeyeLayout = findViewById<RelativeLayout>(R.id.hawkeye_result)
-        showBounceLocations(hawkeyeLayout)
-        setContentView(hawkeyeLayout)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun showBounceLocations(hawkeyeLayout: RelativeLayout) {
         val listOfBounceLocation: MutableList<BounceLocation> = createBounceLocations()
 
-        for(bounceLocation in listOfBounceLocation){
+
+        for ((index, bounceLocation) in listOfBounceLocation.withIndex()) {
+
             val imageView = ImageView(this)
-            imageView.x=myLocation[0] + bounceLocation.axisX
-            imageView.y=myLocation[1] + bounceLocation.axisY
+            imageView.x = tableTennisLocation[0] + bounceLocation.axisX
+            imageView.y = tableTennisLocation[1] + bounceLocation.axisY
+            imageView.id = View.generateViewId()
 
-            val parms = LinearLayout.LayoutParams(50, 50)
+            val params = RelativeLayout.LayoutParams(50, 50)
 
-            imageView.layoutParams = parms
+            imageView.setImageResource(R.drawable.circle_ball)
 
-            imageView.setImageResource(R.drawable.circle_failed)
+            imageView.setOnClickListener {
+                //Your code here
 
-            hawkeyeLayout.addView(imageView)
+                val toolTip = TextView(this)
+                toolTip.text = "Jogada $index"
+                val textColor = ContextCompat.getColor(this, R.color.colorText)
+                toolTip.setTextColor(textColor)
+
+                val layoutParams = RelativeLayout.LayoutParams(250,50)
+                val shapeDrawable = ContextCompat.getDrawable(this, R.drawable.background_text)
+
+                toolTip.background = shapeDrawable
+
+                if(screenWidth < imageView.x + 250){
+                    toolTip.x = screenWidth - 270.0f
+                } else if(imageView.x < 100) {
+                    toolTip.x = 0.0f
+                } else {
+                    toolTip.x = imageView.x - 100
+                }
+
+                toolTip.y = imageView.y - 70
+
+
+                println(toolTip.width)
+
+                hawkeyeLayout.addView(toolTip, layoutParams)
+
+
+                Handler().postDelayed({
+                    hawkeyeLayout.removeView(toolTip)
+                }, 1000L)
+            }
+
+
+            hawkeyeLayout.addView(imageView, params)
         }
     }
 
@@ -68,6 +113,14 @@ class MainActivity : AppCompatActivity() {
             listOfBounceLocation.add(bounceLocation)
         }
         return listOfBounceLocation
+    }
+
+    fun getScreenMetrics() {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        screenWidth = displayMetrics.widthPixels
+        screenHeight = displayMetrics.heightPixels
     }
 
     fun rand(s: Int, e: Int) = Random().nextInt(e + 1 - s) + s
