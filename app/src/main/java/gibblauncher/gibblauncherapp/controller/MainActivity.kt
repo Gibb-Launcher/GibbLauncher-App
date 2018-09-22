@@ -2,6 +2,7 @@ package gibblauncher.gibblauncherapp.controller
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.animation.ObjectAnimator
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -9,6 +10,7 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
 import java.util.*
 import android.annotation.SuppressLint
+import android.graphics.Path
 import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
@@ -16,16 +18,11 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 
-
 class MainActivity : AppCompatActivity() {
     private var tableTennisLocation = IntArray(2)
     private var screenWidth = 0
     private var screenHeight = 0
     private var isShow: Boolean = false
-    private var quantityIn: Int = 0
-    private var quantityOut: Int = 0
-    private var percent: Float = 0.0f
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +60,9 @@ class MainActivity : AppCompatActivity() {
             if(bounceLocation.axisX >= 0 && bounceLocation.axisY >= 0){
                 val imageView = ImageView(this)
 
+
                 imageView.x = tableTennisLocation[0] + bounceLocation.axisX
-                imageView.y = tableTennisLocation[1] + bounceLocation.axisY
+                imageView.y = screenHeight + 50.0f
                 imageView.id = View.generateViewId()
 
                 val params = RelativeLayout.LayoutParams(60, 60)
@@ -106,7 +104,31 @@ class MainActivity : AppCompatActivity() {
 
 
                 hawkeyeLayout.addView(imageView, params)
+
+                val path = Path()
+                path.moveTo(imageView.x + 200, screenHeight + 50.0f)
+                val y = tableTennisLocation[1] + bounceLocation.axisY
+                var sideCurve = 0
+
+                if(index % 2 == 0){
+                    sideCurve = -1
+                } else {
+                    sideCurve = 1
+                }
+
+                path.cubicTo(imageView.x,screenHeight + 50.0f,
+                        imageView.x + (300 * sideCurve), y + (screenHeight - y)/2,
+                        imageView.x,y)
+
+                ObjectAnimator.ofFloat(imageView, View.X,View.Y, path).apply {
+                    duration = 1000
+                    startDelay = 1000L * index
+                    start()
+                }
             }
+
+
+
 
         }
     }
