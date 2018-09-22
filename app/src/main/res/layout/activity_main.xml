@@ -146,14 +146,40 @@
 
     </LinearLayout>
 
-
-    <ImageView
+    <LinearLayout
         android:id="@+id/table_tennis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/score_board"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/table_border"
         android:adjustViewBounds="true"
-        android:src="@drawable/table_tennis" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@drawable/table" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@drawable/table" />
+
+    </LinearLayout>
+
+
+    <!--<ImageView-->
+        <!--android:id="@+id/table_tennis"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:src="@drawable/table" />-->
 
 </RelativeLayout>
 

@@ -13,6 +13,7 @@ import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.Gravity
+import android.widget.LinearLayout
 import android.widget.TextView
 
 
@@ -41,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         super.onWindowFocusChanged(hasFocus)
 
         if (!isShow) {
-            val imageView = findViewById<ImageView>(R.id.table_tennis)
+            val linearLayout = findViewById<LinearLayout>(R.id.table_tennis)
 
-            imageView.getLocationOnScreen(tableTennisLocation)
+            linearLayout.getLocationOnScreen(tableTennisLocation)
 
             val hawkeyeLayout = findViewById<RelativeLayout>(R.id.hawkeye_result)
             showBounceLocations(hawkeyeLayout)
@@ -114,8 +115,8 @@ class MainActivity : AppCompatActivity() {
         val listOfBounceLocation: MutableList<BounceLocation> = mutableListOf()
 
         for (index in 0..9) {
-            val x = rand(-1000, 1000)
-            val y = rand(-1000, 1000)
+            val x = rand(0, 1000)
+            val y = rand(0, 1000)
             val bounceLocation = BounceLocation(x.toFloat(), y.toFloat())
             listOfBounceLocation.add(bounceLocation)
         }
