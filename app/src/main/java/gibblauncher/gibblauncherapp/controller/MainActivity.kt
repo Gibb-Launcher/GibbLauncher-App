@@ -37,19 +37,51 @@ class MainActivity : AppCompatActivity() {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
                 R.id.action_connect -> {
-                    fm.beginTransaction().hide(active).show(fragment1).commit()
+                    if(active is ConnectFragment){
+                        return true
+                    }
+                    fm.beginTransaction()
+                            .setCustomAnimations( R.anim.left_in, R.anim.right_out)
+                            .hide(active)
+                            .show(fragment1)
+                            .commit()
                     active = fragment1
                     return true
                 }
 
                 R.id.action_play -> {
-                    fm.beginTransaction().hide(active).show(fragment2).commit()
+                    if(active is PlayFragment){
+                        return true
+                    }
+                    val inPosition: Int
+                    val outPosition: Int
+
+                    if(active is ConnectFragment){
+                        inPosition =  R.anim.right_in
+                        outPosition = R.anim.left_out
+                    }else {
+                        inPosition =  R.anim.left_in
+                        outPosition = R.anim.right_out
+                    }
+
+                    fm.beginTransaction()
+                            .setCustomAnimations(inPosition, outPosition)
+                            .hide(active)
+                            .show(fragment2)
+                            .commit()
                     active = fragment2
                     return true
                 }
 
                 R.id.action_history -> {
-                    fm.beginTransaction().hide(active).show(fragment3).commit()
+                    if(active is HawkeyeResultFragment){
+                        return true
+                    }
+                    fm.beginTransaction()
+                            .setCustomAnimations( R.anim.right_in, R.anim.left_out)
+                            .hide(active)
+                            .show(fragment3)
+                            .commit()
                     active = fragment3
                     val handler = Handler()
                     handler.postDelayed(Runnable {
