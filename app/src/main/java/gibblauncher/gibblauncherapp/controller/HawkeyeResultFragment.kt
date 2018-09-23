@@ -6,53 +6,54 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.util.DisplayMetrics
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
 import java.util.*
-import java.util.zip.Inflater
 
 
-class HawkeyeResultFragment : Fragment() {
-    private var tableTennisLocation = IntArray(2)
+class HawkeyeResultFragment : Fragment(){
     private var screenWidth = 0
     private var screenHeight = 0
     private var isShow: Boolean = false
 
+
+    fun displayBalls(){
+        if (!isShow) {
+            val hawkeyeLayout = view?.findViewById<RelativeLayout>(R.id.hawkeye_result)
+
+            showBounceLocations(hawkeyeLayout)
+            this.isShow = true
+        }
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        println(isVisibleToUser)
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_hawkeye_result, container, false)
-        val hawkeyeLayout = view.findViewById<RelativeLayout>(R.id.hawkeye_result)
         getScreenMetrics()
 
-//        if (!isShow) {
-//            val linearLayout = view.findViewById<LinearLayout>(R.id.table_tennis)
-//
-//            linearLayout.getLocationOnScreen(tableTennisLocation)
-//
-//            showBounceLocations(hawkeyeLayout)
-//            this.isShow = true
-//        }
-        return view
+        return inflater.inflate(R.layout.fragment_hawkeye_result, container, false)
     }
 
-    private fun showBounceLocations(hawkeyeLayout: RelativeLayout) {
+    private fun showBounceLocations(hawkeyeLayout: RelativeLayout?) {
         val listOfBounceLocation: MutableList<BounceLocation> = createBounceLocations()
 
         for ((index, bounceLocation) in listOfBounceLocation.withIndex()) {
             if (bounceLocation.axisX >= 0 && bounceLocation.axisY >= 0) {
                 val imageView = ImageView(this.context)
 
-                imageView.x = tableTennisLocation[0] + bounceLocation.axisX
+                imageView.x = bounceLocation.axisX
                 imageView.y = screenHeight + 50.0f
                 imageView.id = View.generateViewId()
 
@@ -64,9 +65,9 @@ class HawkeyeResultFragment : Fragment() {
                     showTipBounceLocation(index, imageView, hawkeyeLayout)
                 }
 
-                imageView.layoutParams = params
+                imageView.layoutParams = params as ViewGroup.LayoutParams?
 
-                hawkeyeLayout.addView(imageView)
+                hawkeyeLayout?.addView(imageView)
 
                 generateAnimationInBounceLocation(imageView, bounceLocation, index)
             }
@@ -76,7 +77,11 @@ class HawkeyeResultFragment : Fragment() {
     private fun generateAnimationInBounceLocation(imageView: ImageView, bounceLocation: BounceLocation, index: Int) {
         val path = Path()
         path.moveTo(imageView.x + 200, screenHeight + 50.0f)
-        val y = tableTennisLocation[1] + bounceLocation.axisY
+
+        val header = view?.findViewById<CardView>(R.id.header_hawk)
+        println(header?.height)
+        val marginParams = header?.layoutParams as ViewGroup.MarginLayoutParams
+        val y = bounceLocation.axisY + header.y + header.height + marginParams.bottomMargin
 
         val sideCurve = if (index % 2 == 0) -1 else 1
 
@@ -91,7 +96,8 @@ class HawkeyeResultFragment : Fragment() {
         }
     }
 
-    private fun showTipBounceLocation(index: Int, imageView: ImageView, hawkeyeLayout: RelativeLayout) {
+
+    private fun showTipBounceLocation(index: Int, imageView: ImageView, hawkeyeLayout: RelativeLayout?) {
         val toolTip = TextView(this.context)
         toolTip.text = "Jogada $index"
         val textColor = ContextCompat.getColor(this.context, R.color.colorText)
@@ -113,10 +119,10 @@ class HawkeyeResultFragment : Fragment() {
 
         toolTip.y = imageView.y - 70
 
-        hawkeyeLayout.addView(toolTip, layoutParams)
+        hawkeyeLayout?.addView(toolTip, layoutParams)
 
         Handler().postDelayed({
-            hawkeyeLayout.removeView(toolTip)
+            hawkeyeLayout?.removeView(toolTip)
         }, 1000L)
     }
 
@@ -142,5 +148,6 @@ class HawkeyeResultFragment : Fragment() {
     }
 
     private fun rand(initial: Int, final: Int) = Random().nextInt(final + 1 - initial) + initial
+
 
 }

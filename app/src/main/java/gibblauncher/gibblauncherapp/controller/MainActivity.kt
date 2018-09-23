@@ -2,16 +2,18 @@ package gibblauncher.gibblauncherapp.controller
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import gibblauncher.gibblauncherapp.R
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.util.DisplayMetrics
 import android.view.MenuItem
 
 
 class MainActivity : AppCompatActivity() {
     val fragment1: Fragment = ConnectFragment()
     val fragment2: Fragment = PlayFragment()
-    val fragment3: Fragment = HawkeyeResultFragment()
+    val fragment3 = HawkeyeResultFragment()
     val fm = supportFragmentManager
     var active = fragment2
 
@@ -49,11 +51,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_history -> {
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
+                    val handler = Handler()
+                    handler.postDelayed(Runnable {
+                        fragment3.displayBalls()
+                    },1000)
+
                     return true
                 }
             }
             return false
         }
     }
-
 }

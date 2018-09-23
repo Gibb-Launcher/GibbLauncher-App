@@ -6,7 +6,6 @@
     android:background="@android:color/white"
     tools:context=".controller.PlayFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

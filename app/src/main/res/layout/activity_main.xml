@@ -5,7 +5,7 @@
     android:id="@+id/hawkeye_result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gibblauncher.gibblauncherapp.controller.MainActivity">
+    tools:context=".controller.MainActivity">
 
     <include
         layout="@layout/content_main"
