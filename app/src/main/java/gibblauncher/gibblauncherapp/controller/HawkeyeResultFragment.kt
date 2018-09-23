@@ -14,6 +14,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
+import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
 import java.util.*
 
 
@@ -21,6 +22,8 @@ class HawkeyeResultFragment : Fragment(){
     private var screenWidth = 0
     private var screenHeight = 0
     private var isShow: Boolean = false
+    private var bounceLocationIn: MutableList<BounceLocation> = createBounceLocations()
+    private var bounceLocationOut: MutableList<BounceLocation> = createBounceLocations()
 
 
     fun displayBalls(){
@@ -36,7 +39,6 @@ class HawkeyeResultFragment : Fragment(){
         super.setUserVisibleHint(isVisibleToUser)
         println(isVisibleToUser)
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -70,6 +72,36 @@ class HawkeyeResultFragment : Fragment(){
                 hawkeyeLayout?.addView(imageView)
 
                 generateAnimationInBounceLocation(imageView, bounceLocation, index)
+                bounceLocationIn.add(bounceLocation)
+
+                val handler = Handler()
+                handler.postDelayed(Runnable {
+                    val bounceIn = view?.findViewById<TextView>(R.id.field_in)
+                    val bounceout = view?.findViewById<TextView>(R.id.field_out)
+                    val percent = view?.findViewById<TextView>(R.id.field_percent)
+
+                    val bouncesIn = bounceIn?.text.toString().toInt() + 1
+                    val bouncesOut = bounceout?.text.toString().toInt()
+                    val percentIn = bouncesIn.toFloat()*100 / (bouncesIn + bouncesOut)
+
+                    bounceIn?.text = bouncesIn.toString()
+                    percent?.text = "%.2f".format(percentIn) + "%"
+                },index * 1000L + 1000L)
+            } else{
+                bounceLocationOut.add(bounceLocation)
+                val handler = Handler()
+                handler.postDelayed(Runnable {
+                    val bounceIn = view?.findViewById<TextView>(R.id.field_in)
+                    val bounceout = view?.findViewById<TextView>(R.id.field_out)
+                    val percent = view?.findViewById<TextView>(R.id.field_percent)
+
+                    val bouncesIn = bounceIn?.text.toString().toInt()
+                    val bouncesOut = bounceout?.text.toString().toInt() + 1
+                    val percentIn = bouncesIn.toFloat()*100 / (bouncesIn + bouncesOut)
+
+                    bounceout?.text = bouncesOut.toString()
+                    percent?.text = "%.2f".format(percentIn) + "%"
+                },index * 1000L + 1000L)
             }
         }
     }
@@ -95,7 +127,6 @@ class HawkeyeResultFragment : Fragment(){
             start()
         }
     }
-
 
     private fun showTipBounceLocation(index: Int, imageView: ImageView, hawkeyeLayout: RelativeLayout?) {
         val toolTip = TextView(this.context)
@@ -126,13 +157,12 @@ class HawkeyeResultFragment : Fragment(){
         }, 1000L)
     }
 
-
     private fun createBounceLocations(): MutableList<BounceLocation> {
         val listOfBounceLocation: MutableList<BounceLocation> = mutableListOf()
 
         for (index in 0..9) {
-            val x = rand(0, 1000)
-            val y = rand(0, 1000)
+            val x = rand(-1000, 1000)
+            val y = rand(-1000, 1000)
             val bounceLocation = BounceLocation(x.toFloat(), y.toFloat())
             listOfBounceLocation.add(bounceLocation)
         }
