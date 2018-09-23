@@ -64,7 +64,9 @@ class MainActivity : AppCompatActivity() {
                     showTipBounceLocation(index, imageView, hawkeyeLayout)
                 }
 
-                hawkeyeLayout.addView(imageView, params)
+                imageView.layoutParams = params
+
+                hawkeyeLayout.addView(imageView)
 
                 generateAnimationInBounceLocation(imageView, bounceLocation, index)
             }
@@ -75,7 +77,6 @@ class MainActivity : AppCompatActivity() {
         val path = Path()
         path.moveTo(imageView.x + 200, screenHeight + 50.0f)
         val y = tableTennisLocation[1] + bounceLocation.axisY
-
 
         val sideCurve = if (index % 2 == 0) -1 else 1
 
