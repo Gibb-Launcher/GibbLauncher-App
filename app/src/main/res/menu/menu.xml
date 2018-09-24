@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_connect"
+        android:enabled="true"
+        android:icon="@drawable/ic_connect"
+        android:title="Conexão"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_play"
+        android:enabled="true"
+        android:icon="@drawable/ic_play"
+        android:title="Jogar"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_history"
+        android:enabled="true"
+        android:icon="@drawable/ic_history"
+        android:title="Histórico"
+        app:showAsAction="ifRoom" />
+</menu>
