@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Gibb Launcher</string>
+    <string name="message_scanner">Aponte para o QRCode do Gibblauncher</string>
+    <string name="network_not_found">Não foi possível conectar-se a rede.</string>
+    <string name="cancelled_scan">"Scan Cancelado"</string>
+    <string name="information_scanner">Aponte a câmera para o QRCode presente no lançador, conectando o dispositivo ao lançador.</string>
 </resources>
