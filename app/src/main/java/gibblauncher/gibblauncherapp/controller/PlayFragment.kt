@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
@@ -14,8 +15,7 @@ import android.widget.Toast
 import gibblauncher.gibblauncherapp.R
 import kotlinx.android.synthetic.main.fragment_play.*
 
-class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
-
+class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener, View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
        return inflater.inflate(R.layout.fragment_play, container, false)
@@ -25,6 +25,7 @@ class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         super.onViewCreated(view, savedInstanceState)
 
         seekBarFragmentPlay!!.setOnSeekBarChangeListener(this)
+        buttonNextFragmentPlay!!.setOnClickListener(this)
     }
 
 
@@ -48,6 +49,10 @@ class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
+    override fun onClick(v: View?) {
+        context.toast("Button")
+    }
+
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
     }
 
@@ -56,4 +61,5 @@ class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     fun Context.toast(message: CharSequence) =
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
 }
