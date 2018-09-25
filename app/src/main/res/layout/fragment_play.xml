@@ -58,15 +58,24 @@
 
         </RelativeLayout>
 
-
-        <SeekBar
-            android:id="@+id/seekBarFragmentPlay"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:max="2"
-            android:progress="1" />
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:background="@drawable/mesa">
+
+            <SeekBar
+                android:id="@+id/seekBarFragmentPlay"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="2"
+                android:progress="1"
+                android:background="@color/colorPrimaryDark"/>
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
