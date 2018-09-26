@@ -3,12 +3,9 @@ package gibblauncher.gibblauncherapp.controller
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
 
@@ -50,8 +47,19 @@ class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener, View.OnClickLi
     }
 
     override fun onClick(v: View?) {
-        context.toast("Button")
+        var bundle = Bundle()
+        var selectTrainingFragment = SelectTrainingFragment()
+        bundle.putInt("position", seekBarFragmentPlay.progress)
+
+        selectTrainingFragment.arguments = bundle
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, selectTrainingFragment)
+                .addToBackStack(null)
+                .commit()
     }
+
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
     }
