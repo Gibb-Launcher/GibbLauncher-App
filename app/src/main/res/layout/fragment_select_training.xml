@@ -1,13 +1,112 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="gibblauncher.gibblauncherapp.controller.SelectTrainingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Select Training Fragment!" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <CheckBox
+            android:id="@+id/checkboxSelectTrainingFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Treino Aleatório"
+            android:textAlignment="viewEnd"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:layout_marginTop="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingThree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingFour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingFive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingSix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingSeven"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingEight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingNine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingTen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/buttonSaveTrainingSelectFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Salvar" />
+    </LinearLayout>
+</ScrollView>
