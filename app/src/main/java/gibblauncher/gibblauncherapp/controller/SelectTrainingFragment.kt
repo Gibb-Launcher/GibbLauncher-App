@@ -13,7 +13,7 @@ import android.widget.Toast
 import gibblauncher.gibblauncherapp.R
 import kotlinx.android.synthetic.main.fragment_select_training.*
 
-class SelectTrainingFragment : Fragment() {
+class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -25,10 +25,18 @@ class SelectTrainingFragment : Fragment() {
 
         (activity as AppCompatActivity).supportActionBar?.title = "Novo Treino"
 
+        arguments?.getInt("position")
+
         checkboxSelectTrainingFragment.setOnCheckedChangeListener { buttonView, isChecked ->
             changeSpinners(!isChecked)
         }
 
+        buttonSaveTrainingSelectFragment!!.setOnClickListener(this)
+
+    }
+
+    override fun onClick(v: View?) {
+        context.toast("Click")
     }
 
     private fun changeSpinners(change: Boolean) {
