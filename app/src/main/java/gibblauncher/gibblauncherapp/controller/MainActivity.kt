@@ -107,5 +107,6 @@ class MainActivity : AppCompatActivity() {
                 .schemaVersion(0)
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
+
     }
 }
