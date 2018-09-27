@@ -17,7 +17,7 @@ import io.realm.RealmConfiguration
 
 class MainActivity : AppCompatActivity() {
     val fragment1: Fragment = ConnectFragment()
-    val fragment2: Fragment = PlayFragment()
+    val fragment2: Fragment = TrainingListFragment()
     val fragment3 = HawkeyeResultFragment()
     val fm = supportFragmentManager
     var active = fragment2
