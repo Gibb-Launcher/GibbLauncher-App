@@ -8,6 +8,11 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
 import android.view.MenuItem
+import io.realm.Realm
+import io.realm.Realm.setDefaultConfiguration
+import io.realm.RealmConfiguration
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        startRealm()
 
         val navigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
@@ -93,5 +98,14 @@ class MainActivity : AppCompatActivity() {
             }
             return false
         }
+    }
+
+    private fun startRealm() {
+        Realm.init(this)
+        val realmConfig = RealmConfiguration.Builder()
+                .name("gibblauncher.realm")
+                .schemaVersion(0)
+                .build()
+        Realm.setDefaultConfiguration(realmConfig)
     }
 }
