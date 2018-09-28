@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,20 @@ class TrainingListFragment : Fragment() {
         recyclerView.adapter = TrainingListAdapter(trainings(), context)
         recyclerView.setHasFixedSize(true)
 
+        (recyclerView.adapter as TrainingListAdapter).onItemClick = { training ->
+
+            var bundle = Bundle()
+            var trainingFragment = TrainingFragment()
+            bundle.putString("trainingTitle", training.title)
+
+            trainingFragment.arguments = bundle
+
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.main_container, trainingFragment)
+                    .addToBackStack(null)
+                    .commit()
+        }
     }
 
     private fun trainings(): List<Training> {

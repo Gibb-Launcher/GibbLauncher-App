@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.training_item.view.*
 class TrainingListAdapter(private val trainings: List<Training>,
                           private val context: Context) : RecyclerView.Adapter<TrainingListAdapter.ViewHolder>() {
 
+    var onItemClick: ((Training) -> Unit)? = null
+
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val training = trainings[position]
 
@@ -30,7 +32,13 @@ class TrainingListAdapter(private val trainings: List<Training>,
         return trainings.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        init {
+            itemView.setOnClickListener {
+                onItemClick?.invoke(trainings[adapterPosition])
+            }
+        }
 
         fun bindView(training: Training) {
             val title = itemView.trainingItemTitle
