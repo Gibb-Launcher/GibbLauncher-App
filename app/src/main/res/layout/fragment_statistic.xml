@@ -19,31 +19,150 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pie_chart"
+                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/skills"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="2dp"
+                    app:cardElevation="9dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:contentPadding="0dp">
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/bar_chart"
-                    android:layout_below="@+id/pie_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:id="@+id/horizontal_bar_chart"
-                    android:layout_below="@+id/bar_chart"
+                        <TextView
+                            android:id="@+id/label_skills"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Skills"
+                            android:textAlignment="center"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+
+                        <com.github.mikephil.charting.charts.RadarChart
+                            android:id="@+id/radar_chart"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:layout_below="@+id/label_skills" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/play_list"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/skills"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="2dp"
+                    app:cardElevation="9dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:contentPadding="0dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/play_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Jogadas Realizadas"
+                            android:textAlignment="center"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/pie_chart"
+                            android:layout_width="match_parent"
+                            android:layout_height="500dp"
+                            android:layout_below="@+id/play_label" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/location_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/play_list"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="2dp"
+                    app:cardElevation="9dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:contentPadding="0dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/location_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/play_locations"
+                            android:textAlignment="center"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/bar_chart"
+                            android:layout_width="match_parent"
+                            android:layout_height="500dp"
+                            android:layout_below="@+id/location_label" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/play_locations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/location_list"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="2dp"
+                    app:cardElevation="9dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:contentPadding="0dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/play_locations_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Acertos em Jogadas"
+                            android:textAlignment="center"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+
+                        <com.github.mikephil.charting.charts.HorizontalBarChart
+                            android:id="@+id/horizontal_bar_chart"
+                            android:layout_width="match_parent"
+                            android:layout_height="500dp"
+                            android:layout_below="@+id/play_locations_label" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="Dentro"
-                android:textColor="@android:color/white"
-                android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
 

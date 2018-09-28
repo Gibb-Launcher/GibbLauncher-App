@@ -9,6 +9,8 @@
     <string name="information_scanner">Aponte a câmera para o QRCode presente no lançador, conectando o dispositivo ao lançador.</string>
 
     <string name="shot_prompt">Escolha a jogada</string>
+    <string name="play_locations">Locais das Jogadas</string>
+
 
     <string-array name="shot_arrays">
         <item>Paralela</item>

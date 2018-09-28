@@ -111,7 +111,7 @@ class HawkeyeResultFragment : Fragment(){
         path.moveTo(imageView.x + 200, screenHeight + 50.0f)
 
         val header = view?.findViewById<CardView>(R.id.header_hawk)
-        println(header?.height)
+
         val marginParams = header?.layoutParams as ViewGroup.MarginLayoutParams
         val y = bounceLocation.axisY + header.y + header.height + marginParams.bottomMargin
 
