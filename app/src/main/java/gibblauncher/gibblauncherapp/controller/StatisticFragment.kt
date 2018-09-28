@@ -6,26 +6,34 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
 
 import gibblauncher.gibblauncherapp.R
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.charts.HorizontalBarChart
-import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.data.RadarData
 import android.graphics.Color
 import com.github.mikephil.charting.data.RadarDataSet
+import android.app.DatePickerDialog
+import kotlinx.android.synthetic.main.fragment_statistic.*
+import java.util.*
 
 
 class StatisticFragment : Fragment() {
     private val yData = floatArrayOf(20f, 10f, 20f, 10f, 40f)
     private val xData = arrayOf("Jogada 1", "Jogada 2", "Jogada 3", "Jogada 4", "Jogada 5")
+
+    private var initialYear: Int? = 0
+    private var initialMonth: Int? = 0
+    private var initialDay: Int? = 0
+    private var finalYear: Int? = 0
+    private var finalMonth: Int? = 0
+    private var finalDay: Int? = 0
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,6 +42,7 @@ class StatisticFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        clickListener()
         createPieChart()
         createBarChartPosition()
         createBarChartPlay()
@@ -41,9 +50,40 @@ class StatisticFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun createPieChart() {
-        val pieChart = view!!.findViewById<PieChart>(R.id.pie_chart)
+    fun clickListener(){
+            btnInitialDate.setOnClickListener{
+                // Get Current Date
+                val c = Calendar.getInstance()
+                initialYear = c.get(Calendar.YEAR)
+                initialMonth = c.get(Calendar.MONTH)
+                initialDay = c.get(Calendar.DAY_OF_MONTH)
 
+
+                val datePickerDialog = DatePickerDialog(context,
+                        DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                            initialDate.setText(dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year) }, initialYear!!, initialMonth!!, initialDay!!)
+                datePickerDialog.show()
+            }
+
+        btnFinalDate.setOnClickListener{
+            // Get Current Date
+            val c = Calendar.getInstance()
+            finalYear = c.get(Calendar.YEAR)
+            finalMonth = c.get(Calendar.MONTH)
+            finalDay = c.get(Calendar.DAY_OF_MONTH)
+
+
+            val datePickerDialog = DatePickerDialog(context,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        finalDate.setText(dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year) }, finalYear!!, finalMonth!!, finalDay!!)
+            datePickerDialog.show()
+        }
+
+
+    }
+
+
+    private fun createPieChart() {
         val description = Description()
         description.text = "Jogadas Feitas (%)"
         pieChart.description = description
@@ -78,8 +118,6 @@ class StatisticFragment : Fragment() {
     }
 
     private fun createBarChartPosition() {
-        val barChart = view!!.findViewById<BarChart>(R.id.bar_chart)
-
         val barEntries: MutableList<BarEntry> = mutableListOf()
         val barEntries1: MutableList<BarEntry> = mutableListOf()
 
@@ -125,8 +163,6 @@ class StatisticFragment : Fragment() {
     }
 
     private fun createBarChartPlay() {
-        val barChart = view!!.findViewById<HorizontalBarChart>(R.id.horizontal_bar_chart)
-
         // Create bars
         // TODO get plays
         val yValues: MutableList<BarEntry> = mutableListOf()
@@ -148,7 +184,7 @@ class StatisticFragment : Fragment() {
         data.setValueFormatter(PercentFormatter())
 
         // Make the chart use the acquired data
-        barChart.data = data
+        horizontalBarChart.data = data
 
         // Create the labels for the bars
         val xVals: MutableList<String> = mutableListOf()
@@ -161,40 +197,38 @@ class StatisticFragment : Fragment() {
         xVals.add("Jogada 7")
 
         // Display labels for bars
-        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(xVals)
+        horizontalBarChart.xAxis.valueFormatter = IndexAxisValueFormatter(xVals)
 
         // Set the maximum value that can be taken by the bars
-        barChart.axisLeft.axisMaximum = 100f
+        horizontalBarChart.axisLeft.axisMaximum = 100f
 
         // Bars are sliding in from left to right
-        barChart.animateXY(1000, 1000)
+        horizontalBarChart.animateXY(1000, 1000)
         // Display scores inside the bars
-        barChart.setDrawValueAboveBar(false)
+        horizontalBarChart.setDrawValueAboveBar(false)
 
         // Hide grid lines
-        barChart.axisLeft.isEnabled = false
-        barChart.axisRight.isEnabled = false
+        horizontalBarChart.axisLeft.isEnabled = false
+        horizontalBarChart.axisRight.isEnabled = false
         // Hide graph description
-        barChart.description.isEnabled = false
+        horizontalBarChart.description.isEnabled = false
         // Hide graph legend
-        barChart.legend.isEnabled = false
+        horizontalBarChart.legend.isEnabled = false
 
-        barChart.axisRight.setDrawGridLines(false)
-        barChart.axisLeft.setDrawGridLines(false)
-        barChart.xAxis.setDrawGridLines(false)
+        horizontalBarChart.axisRight.setDrawGridLines(false)
+        horizontalBarChart.axisLeft.setDrawGridLines(false)
+        horizontalBarChart.xAxis.setDrawGridLines(false)
 
 
         // Design
         dataSet.setColors(*ColorTemplate.VORDIPLOM_COLORS)
         data.setValueTextSize(13f)
 
-        barChart.invalidate()
+        horizontalBarChart.invalidate()
     }
 
     private fun createRadarChart() {
         val entries: MutableList<RadarEntry> = mutableListOf()
-
-        val radarChart = view!!.findViewById<RadarChart>(R.id.radar_chart)
 
         // TODO get training and plays
         entries.add(RadarEntry (95f, "Treinos Vencidos"))
