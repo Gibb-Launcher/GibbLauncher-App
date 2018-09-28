@@ -3,16 +3,15 @@ package gibblauncher.gibblauncherapp.controller
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.Training
-import kotlinx.android.synthetic.main.fragment_select_training.*
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_training_list.*
 
 class TrainingListFragment : Fragment() {
@@ -37,11 +36,9 @@ class TrainingListFragment : Fragment() {
     }
 
     private fun trainings(): List<Training> {
-        val training = Training()
-        training.title = "Titulo"
-        return listOf(
-                training,
-                training,
-                training)
+        val realm = Realm.getDefaultInstance()
+        val results = realm.where<Training>().findAll().toArray()
+
+        return results.map { it as Training }
     }
 }

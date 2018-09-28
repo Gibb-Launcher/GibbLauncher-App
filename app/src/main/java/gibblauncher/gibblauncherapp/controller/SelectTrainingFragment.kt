@@ -81,11 +81,6 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
                         training.shots.add(spinnerTrainingNine.selectedItem.toString())
                         training.shots.add(spinnerTrainingTen.selectedItem.toString())
                     }
-
-                    val results = realm.where<Training>().findAll()
-                    Log.d("Resultados", spinnerTrainingOne.selectedItem.toString())
-                    Log.d("Resultados", results.first()?.title)
-                    Log.d("Resultados", results.toString())
                 }
             } catch (e: RealmPrimaryKeyConstraintException) {
                 trainingTitleSelectTrainingFragment.setError("Já existe um treino com esse nome!")
