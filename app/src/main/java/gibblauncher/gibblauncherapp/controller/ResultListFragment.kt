@@ -2,6 +2,7 @@ package gibblauncher.gibblauncherapp.controller
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -38,14 +39,23 @@ class ResultListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         (recyclerView.adapter as ResultListAdapter).onItemClick = { result ->
-            var hawkeyeResultFragment = HawkeyeResultFragment()
-
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, hawkeyeResultFragment)
-                    .addToBackStack(null)
-                    .commit()
+           openHawkeyeResultFragment()
         }
+    }
+
+    private fun openHawkeyeResultFragment() {
+        var hawkeyeResultFragment = HawkeyeResultFragment()
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, hawkeyeResultFragment)
+                .addToBackStack(null)
+                .commit()
+
+        val handler = Handler()
+        handler.postDelayed(Runnable {
+            hawkeyeResultFragment.displayBalls()
+        },1000)
     }
 
     // TODO - Mudar para uma lista de resultados
