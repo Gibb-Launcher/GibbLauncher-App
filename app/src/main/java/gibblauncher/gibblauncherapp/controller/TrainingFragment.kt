@@ -1,12 +1,13 @@
 package gibblauncher.gibblauncherapp.controller
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.Training
@@ -14,7 +15,7 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_training.*
 
-class TrainingFragment : Fragment() {
+class TrainingFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -29,6 +30,12 @@ class TrainingFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = trainingTitle
 
         trainingTitle?.let { initializeTrainingData(it) }
+
+        buttonStartTrainingFragment.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        context.toast("Iniciando treinamento.")
     }
 
     private fun initializeTrainingData(trainingTitle: String) {
@@ -64,4 +71,7 @@ class TrainingFragment : Fragment() {
 
         return launcherPositionString
     }
+
+    fun Context.toast(message: CharSequence) =
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

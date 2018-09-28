@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.Training
@@ -15,15 +16,8 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_aleatory_training.*
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [AleatoryTrainingFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [AleatoryTrainingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class AleatoryTrainingFragment : Fragment() {
+
+class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -38,6 +32,9 @@ class AleatoryTrainingFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = trainingTitle
 
         trainingTitle?.let { initializeTrainingData(it) }
+
+        buttonStartAleatoryTrainingFragment.setOnClickListener(this)
+
     }
 
     private fun takeTrainingInDatabase(trainingTitle: String): Training {
@@ -54,6 +51,10 @@ class AleatoryTrainingFragment : Fragment() {
 
     }
 
+    override fun onClick(v: View?) {
+        context.toast("Iniciando treinamento.")
+    }
+
     private fun parseLauncherPosition(position: Int): String? {
         var launcherPositionString : String? = null
         when(position) {
@@ -64,5 +65,8 @@ class AleatoryTrainingFragment : Fragment() {
 
         return launcherPositionString
     }
+
+    fun Context.toast(message: CharSequence) =
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
 }
