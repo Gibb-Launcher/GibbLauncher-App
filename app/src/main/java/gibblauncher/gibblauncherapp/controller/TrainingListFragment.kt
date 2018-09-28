@@ -36,17 +36,31 @@ class TrainingListFragment : Fragment() {
 
         (recyclerView.adapter as TrainingListAdapter).onItemClick = { training ->
 
-            var bundle = Bundle()
-            var trainingFragment = TrainingFragment()
-            bundle.putString("trainingTitle", training.title)
+            if(training.isAleatory) {
+                var bundle = Bundle()
+                var aleatoryTrainingFragment = AleatoryTrainingFragment()
+                bundle.putString("trainingTitle", training.title)
 
-            trainingFragment.arguments = bundle
+                aleatoryTrainingFragment.arguments = bundle
 
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, trainingFragment)
-                    .addToBackStack(null)
-                    .commit()
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_container, aleatoryTrainingFragment)
+                        .addToBackStack(null)
+                        .commit()
+            } else {
+                var bundle = Bundle()
+                var trainingFragment = TrainingFragment()
+                bundle.putString("trainingTitle", training.title)
+
+                trainingFragment.arguments = bundle
+
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_container, trainingFragment)
+                        .addToBackStack(null)
+                        .commit()
+            }
         }
     }
 
