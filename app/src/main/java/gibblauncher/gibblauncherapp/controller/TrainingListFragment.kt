@@ -27,6 +27,24 @@ class TrainingListFragment : Fragment() {
 
         (activity as AppCompatActivity).supportActionBar?.title = "Treinamentos"
 
+        setRecyclerView()
+
+        setFabListener()
+    }
+
+    private fun setFabListener() {
+        fabTrainingList.setOnClickListener {
+            var playFragment = PlayFragment()
+
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.main_container, playFragment)
+                    .addToBackStack(null)
+                    .commit()
+        }
+    }
+
+    private fun setRecyclerView() {
         val recyclerView = recyclerViewTrainings
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
@@ -37,31 +55,39 @@ class TrainingListFragment : Fragment() {
         (recyclerView.adapter as TrainingListAdapter).onItemClick = { training ->
 
             if(training.isAleatory) {
-                var bundle = Bundle()
-                var aleatoryTrainingFragment = AleatoryTrainingFragment()
-                bundle.putString("trainingTitle", training.title)
-
-                aleatoryTrainingFragment.arguments = bundle
-
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.main_container, aleatoryTrainingFragment)
-                        .addToBackStack(null)
-                        .commit()
+                openAleatoryTraining(training)
             } else {
-                var bundle = Bundle()
-                var trainingFragment = TrainingFragment()
-                bundle.putString("trainingTitle", training.title)
-
-                trainingFragment.arguments = bundle
-
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.main_container, trainingFragment)
-                        .addToBackStack(null)
-                        .commit()
+                openTraining(training)
             }
         }
+    }
+
+    private fun openAleatoryTraining(training: Training) {
+        var bundle = Bundle()
+        var aleatoryTrainingFragment = AleatoryTrainingFragment()
+        bundle.putString("trainingTitle", training.title)
+
+        aleatoryTrainingFragment.arguments = bundle
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, aleatoryTrainingFragment)
+                .addToBackStack(null)
+                .commit()
+    }
+
+    private fun openTraining(training: Training) {
+        var bundle = Bundle()
+        var trainingFragment = TrainingFragment()
+        bundle.putString("trainingTitle", training.title)
+
+        trainingFragment.arguments = bundle
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, trainingFragment)
+                .addToBackStack(null)
+                .commit()
     }
 
     private fun trainings(): List<Training> {

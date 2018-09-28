@@ -50,6 +50,16 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         saveTrainingInDatabase()
+
+        context.toast("Treino salvo com sucesso!")
+
+        var trainingListFragment = TrainingListFragment()
+
+        fragmentManager.popBackStack()
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, trainingListFragment)
+                .commit()
     }
 
 
@@ -127,4 +137,7 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
         spinnerTrainingNine.isEnabled = change
         spinnerTrainingTen.isEnabled = change
     }
+
+    fun Context.toast(message: CharSequence) =
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
