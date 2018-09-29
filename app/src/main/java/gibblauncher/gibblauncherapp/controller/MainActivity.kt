@@ -15,8 +15,9 @@ import io.realm.RealmConfiguration
 
 class MainActivity : AppCompatActivity() {
     val fragment1: Fragment = StatisticFragment()
-    val fragment2: Fragment = PlayFragment()
-    val fragment3 = HawkeyeResultFragment()
+    val fragment2: Fragment = TrainingListFragment()
+    val fragment3 = ResultListFragment()
+
     val fm = supportFragmentManager
     var active = fragment2
 
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.action_play -> {
-                    if(active is PlayFragment){
+                    if(active is TrainingListFragment){
                         return true
                     }
                     val inPosition: Int
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.action_history -> {
-                    if(active is HawkeyeResultFragment){
+                    if(active is ResultListFragment){
                         return true
                     }
                     fm.beginTransaction()
@@ -86,11 +87,12 @@ class MainActivity : AppCompatActivity() {
                             .show(fragment3)
                             .commit()
                     active = fragment3
+                    /*
                     val handler = Handler()
                     handler.postDelayed(Runnable {
                         fragment3.displayBalls()
                     },1000)
-
+                    */
                     return true
                 }
             }

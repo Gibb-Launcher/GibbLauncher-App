@@ -57,23 +57,29 @@ class WifiConnectActivity : AppCompatActivity() {
     }
 
     fun configNetworkWifi() {
-        wifi!!.setWifiEnabled(true)
         wc.SSID = networkName
         wc.preSharedKey = String.format("\"%s\"", key)
         wc.hiddenSSID = true
         wc.status = WifiConfiguration.Status.ENABLED
-        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
-        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
-        wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
-        wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
-        wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
+        wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN)
         wc.allowedProtocols.set(WifiConfiguration.Protocol.RSN)
+        wc.allowedProtocols.set(WifiConfiguration.Protocol.WPA)
+        wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
+        wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
+        wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
+        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40)
+        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104)
+        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
+        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
     }
 
     fun connectNetwork() {
         val result: Int = wifi!!.addNetwork(wc)
+        wifi!!.setWifiEnabled(true)
+        wifi!!.disconnect()
         var isConnect: Boolean = wifi!!.enableNetwork(result, true)
         if (isConnect) {
+            wifi!!.reconnect()
             Toast.makeText(applicationContext, (getString(R.string.network_connected)),Toast.LENGTH_LONG).show()
             val intent = Intent(this, MainActivity::class.java)
             finish()

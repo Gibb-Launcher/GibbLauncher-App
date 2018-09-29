@@ -11,6 +11,9 @@ open class Training : RealmObject() {
     @Required
     @PrimaryKey
     var title: String? = null
+    var launcherPosition: Int? = null
     var shots: RealmList<String> = RealmList()
+    var isAleatory: Boolean = false
+    var possibleShots: RealmList<String> = RealmList()
 
 }
