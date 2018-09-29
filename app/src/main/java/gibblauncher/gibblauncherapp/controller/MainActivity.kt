@@ -8,19 +8,24 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
 import android.view.MenuItem
+import io.realm.Realm
+import io.realm.Realm.setDefaultConfiguration
+import io.realm.RealmConfiguration
+
+
 
 
 class MainActivity : AppCompatActivity() {
     val fragment1: Fragment = ConnectFragment()
-    val fragment2: Fragment = PlayFragment()
-    val fragment3 = HawkeyeResultFragment()
+    val fragment2: Fragment = TrainingListFragment()
+    val fragment3: Fragment = ResultListFragment()
     val fm = supportFragmentManager
     var active = fragment2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        startRealm()
 
         val navigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
@@ -50,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.action_play -> {
-                    if(active is PlayFragment){
+                    if(active is TrainingListFragment){
                         return true
                     }
                     val inPosition: Int
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.action_history -> {
-                    if(active is HawkeyeResultFragment){
+                    if(active is ResultListFragment){
                         return true
                     }
                     fm.beginTransaction()
@@ -83,15 +88,26 @@ class MainActivity : AppCompatActivity() {
                             .show(fragment3)
                             .commit()
                     active = fragment3
+                    /*
                     val handler = Handler()
                     handler.postDelayed(Runnable {
                         fragment3.displayBalls()
                     },1000)
-
+                    */
                     return true
                 }
             }
             return false
         }
+    }
+
+    private fun startRealm() {
+        Realm.init(this)
+        val realmConfig = RealmConfiguration.Builder()
+                .name("gibblauncher.realm")
+                .schemaVersion(0)
+                .build()
+        Realm.setDefaultConfiguration(realmConfig)
+
     }
 }

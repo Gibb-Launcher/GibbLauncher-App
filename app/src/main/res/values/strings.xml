@@ -7,4 +7,13 @@
     <string name="network_connected">Dispositivo conectado ao Gibblauncher</string>
     <string name="cancelled_scan">"Scan Cancelado"</string>
     <string name="information_scanner">Aponte a câmera para o QRCode presente no lançador, conectando o dispositivo ao lançador.</string>
+
+    <string name="shot_prompt">Escolha a jogada</string>
+
+    <string-array name="shot_arrays">
+        <item>Paralela</item>
+        <item>Paralela com Spin</item>
+        <item>Esquerda</item>
+        <item>Direita</item>
+    </string-array>
 </resources>
