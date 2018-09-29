@@ -6,5 +6,5 @@
     <color name="colorText">#000000</color>
     <color name="colorBorder">#000000</color>
     <color name="colorBackgroundTip">#e7ffffff</color>
-
+    <color name="colorOrange">#DD8910</color>
 </resources>
