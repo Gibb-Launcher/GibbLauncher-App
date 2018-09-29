@@ -4,8 +4,8 @@
     <item
         android:id="@+id/action_connect"
         android:enabled="true"
-        android:icon="@drawable/ic_connect"
-        android:title="Conexão"
+        android:icon="@drawable/ic_statistic"
+        android:title="Estatística"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_play"
