@@ -6,19 +6,18 @@ import android.os.Handler
 import gibblauncher.gibblauncherapp.R
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.util.DisplayMetrics
 import android.view.MenuItem
 import io.realm.Realm
-import io.realm.Realm.setDefaultConfiguration
 import io.realm.RealmConfiguration
 
 
 
 
 class MainActivity : AppCompatActivity() {
-    val fragment1: Fragment = ConnectFragment()
+    val fragment1: Fragment = StatisticFragment()
     val fragment2: Fragment = TrainingListFragment()
-    val fragment3: Fragment = ResultListFragment()
+    val fragment3 = ResultListFragment()
+
     val fm = supportFragmentManager
     var active = fragment2
 
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
                 R.id.action_connect -> {
-                    if(active is ConnectFragment){
+                    if(active is StatisticFragment){
                         return true
                     }
                     fm.beginTransaction()
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     val inPosition: Int
                     val outPosition: Int
 
-                    if(active is ConnectFragment){
+                    if(active is StatisticFragment){
                         inPosition =  R.anim.right_in
                         outPosition = R.anim.left_out
                     }else {

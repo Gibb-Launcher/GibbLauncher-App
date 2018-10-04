@@ -22,7 +22,6 @@ class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener, View.OnClickLi
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Selecionar posição"
         seekBarFragmentPlay!!.setOnSeekBarChangeListener(this)
         buttonNextFragmentPlay!!.setOnClickListener(this)
     }
