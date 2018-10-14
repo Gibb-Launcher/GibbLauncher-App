@@ -4,28 +4,30 @@ package gibblauncher.gibblauncherapp.controller
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiConfiguration
-import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-
 import com.google.zxing.integration.android.IntentIntegrator
 import gibblauncher.gibblauncherapp.R
 
 class WifiConnectActivity : AppCompatActivity() {
-
+        val TAG:String="WifiActivity";
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
-        private var key: String? = null
-        private var networkName: String? = null
+        private lateinit var key: String
+        private lateinit var networkName: String
 
 
     override fun onCreate(savedInstanceState: Bundle? ) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wificonnect)
+
         wifi = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifi!!.isWifiEnabled = false
+        wifi!!.isWifiEnabled = true
 
         var btQrcode: Button = findViewById(R.id.bt_QRCode)
 
@@ -33,13 +35,50 @@ class WifiConnectActivity : AppCompatActivity() {
 
     }
 
+    private fun connectToWPAWiFi(ssid:String, pass:String){
+        val wm:WifiManager= applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wm.isWifiEnabled = true
+        var wifiConfig=getWiFiConfig(ssid)
+        if(wifiConfig==null){//if the given ssid is not present in the WiFiConfig, create a config for it
+            createWPAProfile(ssid,pass)
+            wifiConfig=getWiFiConfig(ssid)
+        }
+        wm.disconnect()
+        wm.enableNetwork(wifiConfig!!.networkId,true)
+        wm.reconnect()
+        Toast.makeText(applicationContext, R.string.device_connected, Toast.LENGTH_SHORT).show()
+        changeActivity()
+        Log.d(TAG, "intiated connection to SSID$ssid")
+    }
+
+    private fun getWiFiConfig(ssid: String): WifiConfiguration? {
+        val wm:WifiManager= applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wm.isWifiEnabled = true
+        val wifiList=wm.configuredNetworks
+        for (item in wifiList){
+            if(item.SSID != null && item.SSID.equals(ssid)){
+                return item
+            }
+        }
+        return null
+    }
+
+    private fun createWPAProfile(ssid: String, pass: String){
+        Log.d(TAG, "Saving SSID :$ssid")
+        val conf = WifiConfiguration()
+        conf.SSID = ssid
+        conf.preSharedKey = pass
+        val wm:WifiManager= applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wm.addNetwork(conf)
+        Log.d(TAG,"saved SSID to WiFiManger")
+    }
+
     override fun onActivityResult(requestCode: Int,resultCode: Int, data: Intent?) {
         var result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if(result != null){
             if(result.contents != null){
                 getNetworkInformation(result.contents)
-                configNetworkWifi()
-                connectNetwork()
+                connectToWPAWiFi(networkName, key)
             } else {
                 Toast.makeText(applicationContext, getString(R.string.cancelled_scan), Toast.LENGTH_LONG).show()
             }
@@ -47,46 +86,6 @@ class WifiConnectActivity : AppCompatActivity() {
             super.onActivityResult(requestCode, resultCode, data)
         }
 
-    }
-
-
-    fun desconnectNetwork() {
-        var info: WifiInfo = wifi!!.connectionInfo
-        var id: Int = info.networkId
-        wifi!!.removeNetwork(id)
-    }
-
-    fun configNetworkWifi() {
-        wc.SSID = networkName
-        wc.preSharedKey = String.format("\"%s\"", key)
-        wc.hiddenSSID = true
-        wc.status = WifiConfiguration.Status.ENABLED
-        wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN)
-        wc.allowedProtocols.set(WifiConfiguration.Protocol.RSN)
-        wc.allowedProtocols.set(WifiConfiguration.Protocol.WPA)
-        wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
-        wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
-        wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
-        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40)
-        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104)
-        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
-        wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
-    }
-
-    fun connectNetwork() {
-        val result: Int = wifi!!.addNetwork(wc)
-        wifi!!.setWifiEnabled(true)
-        wifi!!.disconnect()
-        var isConnect: Boolean = wifi!!.enableNetwork(result, true)
-        if (isConnect) {
-            wifi!!.reconnect()
-            Toast.makeText(applicationContext, (getString(R.string.network_connected)),Toast.LENGTH_LONG).show()
-            val intent = Intent(this, MainActivity::class.java)
-            finish()
-            startActivity(intent)
-        } else {
-            Toast.makeText(applicationContext, (getString(R.string.network_not_found)), Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun openQRCode() {
@@ -99,7 +98,13 @@ class WifiConnectActivity : AppCompatActivity() {
 
     private fun getNetworkInformation(QRCodeString: String ) {
         val configurationNetwork = QRCodeString.split(";")
-        networkName = configurationNetwork[0]
-        key = configurationNetwork[1]
+        networkName = String.format("\"%s\"", configurationNetwork[0])
+        key = String.format("\"%s\"", configurationNetwork[1])
+    }
+
+    private fun changeActivity(){
+        var intent : Intent = Intent(this, MainActivity::class.java)
+        finish()
+        startActivity(intent)
     }
 }
