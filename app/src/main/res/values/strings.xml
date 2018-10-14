@@ -7,7 +7,9 @@
     <string name="network_connected">Dispositivo conectado ao Gibblauncher</string>
     <string name="cancelled_scan">"Scan Cancelado"</string>
     <string name="information_scanner">Aponte a câmera para o QRCode presente no lançador, conectando o dispositivo ao lançador.</string>
-
+    <string name="connecting_network">"Conectando-se ao Giblaucher"</string>
+    <string name="device_connected">"Dispositivo conectado ao lançador"</string>
+    <string name="device_is_connected">Dispositivo já está conectado ao Gibblauncher</string>
     <string name="shot_prompt">Escolha a jogada</string>
     <string name="play_locations">Locais das Jogadas</string>
 
