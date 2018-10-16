@@ -4,16 +4,22 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
+import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
+import gibblauncher.gibblauncherapp.model.Test
 import gibblauncher.gibblauncherapp.model.Training
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_training.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class TrainingFragment : Fragment(), View.OnClickListener {
 
@@ -35,6 +41,21 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        val call = RetrofitInitializer().apiService().get()
+        call.enqueue(object: Callback<Test?> {
+            override fun onResponse(call: Call<Test?>?,
+                                    response: Response<Test?>?) {
+                response?.body()?.let {
+                    Log.d("Response", it.data)
+                }
+            }
+
+            override fun onFailure(call: Call<Test?>?,
+                                   t: Throwable?) {
+                Log.d("Response", "what")
+            }
+        })
+
         context.toast("Iniciando treinamento.")
     }
 
