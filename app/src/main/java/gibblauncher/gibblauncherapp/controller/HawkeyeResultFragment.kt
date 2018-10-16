@@ -52,10 +52,10 @@ class HawkeyeResultFragment : Fragment(){
         val listOfBounceLocation: MutableList<BounceLocation> = createBounceLocations()
 
         for ((index, bounceLocation) in listOfBounceLocation.withIndex()) {
-            if (bounceLocation.axisX >= 0 && bounceLocation.axisY >= 0) {
+            if (bounceLocation.x >= 0 && bounceLocation.y >= 0) {
                 val imageView = ImageView(this.context)
 
-                imageView.x = bounceLocation.axisX
+                imageView.x = bounceLocation.x
                 imageView.y = screenHeight + 50.0f
                 imageView.id = View.generateViewId()
 
@@ -113,7 +113,7 @@ class HawkeyeResultFragment : Fragment(){
         val header = view?.findViewById<CardView>(R.id.header_hawk)
 
         val marginParams = header?.layoutParams as ViewGroup.MarginLayoutParams
-        val y = bounceLocation.axisY + header.y + header.height + marginParams.bottomMargin
+        val y = bounceLocation.y + header.y + header.height + marginParams.bottomMargin
 
         val sideCurve = if (index % 2 == 0) -1 else 1
 

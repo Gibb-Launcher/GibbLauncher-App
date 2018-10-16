@@ -1,3 +1,3 @@
 package gibblauncher.gibblauncherapp.model
 
-data class BounceLocation(val axisX: Float, val axisY: Float)
+data class BounceLocation(val x: Float, val y: Float)

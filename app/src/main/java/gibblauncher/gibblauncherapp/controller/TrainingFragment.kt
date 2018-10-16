@@ -12,7 +12,7 @@ import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
-import gibblauncher.gibblauncherapp.model.Test
+import gibblauncher.gibblauncherapp.model.Bounces
 import gibblauncher.gibblauncherapp.model.Training
 import io.realm.Realm
 import io.realm.kotlin.where
@@ -41,18 +41,19 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val call = RetrofitInitializer().apiService().get()
-        call.enqueue(object: Callback<Test?> {
-            override fun onResponse(call: Call<Test?>?,
-                                    response: Response<Test?>?) {
+        val call = RetrofitInitializer().apiService().post()
+        call.enqueue(object: Callback<Bounces?> {
+            override fun onResponse(call: Call<Bounces?>?,
+                                    response: Response<Bounces?>?) {
                 response?.body()?.let {
-                    Log.d("Response", it.data)
+                    for(bounce in it.bounces)
+                        Log.d("Response", bounce.x.toString() + " " + bounce.y)
                 }
             }
 
-            override fun onFailure(call: Call<Test?>?,
+            override fun onFailure(call: Call<Bounces?>?,
                                    t: Throwable?) {
-                Log.d("Response", "what")
+                Log.d("Response", t?.message)
             }
         })
 
