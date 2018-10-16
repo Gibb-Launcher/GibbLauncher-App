@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
@@ -41,10 +42,17 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        progressBarFragmentTraining.visibility = View.VISIBLE
+        activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
         val call = RetrofitInitializer().apiService().post()
         call.enqueue(object: Callback<Bounces?> {
             override fun onResponse(call: Call<Bounces?>?,
                                     response: Response<Bounces?>?) {
+                progressBarFragmentTraining.visibility = View.INVISIBLE
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
                 response?.body()?.let {
                     for(bounce in it.bounces)
                         Log.d("Response", bounce.x.toString() + " " + bounce.y)
@@ -53,6 +61,10 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
             override fun onFailure(call: Call<Bounces?>?,
                                    t: Throwable?) {
+                progressBarFragmentTraining.visibility = View.INVISIBLE
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+
                 Log.d("Response", t?.message)
             }
         })
