@@ -17,6 +17,7 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
 import gibblauncher.gibblauncherapp.model.Bounces
 import gibblauncher.gibblauncherapp.model.Training
+import gibblauncher.gibblauncherapp.model.TrainingDataApi
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_training.*
@@ -49,8 +50,8 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         val dialog = progressDialogChanges()
 
         // TODO - Adicionar dados que serão mandados pra API
-        val call = RetrofitInitializer().apiService().post()
-        call.enqueue(object: Callback<Bounces?> {
+        val call = trainingData()?.let { RetrofitInitializer().apiService().post(it) }
+        call!!.enqueue(object: Callback<Bounces?> {
             override fun onResponse(call: Call<Bounces?>?,
                                     response: Response<Bounces?>?) {
                 dialog.dismiss()
@@ -68,6 +69,27 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                 Log.d("Response", t?.message)
             }
         })
+    }
+
+    private fun trainingData(): TrainingDataApi? {
+        // TODO - fazer lógica pra pegar o ID no banco e incrementar
+        val id = "IdAleatorio"
+        val launcherPosition = parseLauncherPositionString(trainingPositionTrainingFragment.text.toString())
+        val shots = listOf(trainingShotOneTrainingFragment.text.toString(),
+                                    trainingShotTwoTrainingFragment.text.toString(),
+                                    trainingShotThreeTrainingFragment.text.toString(),
+                                    trainingShotFourTrainingFragment.text.toString(),
+                                    trainingShotFiveTrainingFragment.text.toString(),
+                                    trainingShotSixTrainingFragment.text.toString(),
+                                    trainingShotSevenTrainingFragment.text.toString(),
+                                    trainingShotEightTrainingFragment.text.toString(),
+                                    trainingShotNineTrainingFragment.text.toString(),
+                                    trainingShotTenTrainingFragment.text.toString())
+
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots) }
+
+        return trainingDataApi
     }
 
     private fun progressDialogChanges(): ProgressDialog {
@@ -121,6 +143,17 @@ class TrainingFragment : Fragment(), View.OnClickListener {
             0 -> launcherPositionString = "Esquerda"
             1 -> launcherPositionString = "Centro"
             2 -> launcherPositionString = "Direita"
+        }
+
+        return launcherPositionString
+    }
+
+    private fun parseLauncherPositionString(position: String): Int? {
+        var launcherPositionString : Int? = null
+        when(position) {
+            "Esquerda" -> launcherPositionString = 0
+            "Centro" -> launcherPositionString = 1
+            "Direita" -> launcherPositionString = 2
         }
 
         return launcherPositionString
