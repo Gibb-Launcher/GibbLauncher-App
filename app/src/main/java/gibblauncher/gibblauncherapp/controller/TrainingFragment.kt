@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -49,7 +48,6 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         val dialog = progressDialogChanges()
 
-        // TODO - Adicionar dados que serão mandados pra API
         val call = trainingData()?.let { RetrofitInitializer().apiService().post(it) }
         call!!.enqueue(object: Callback<Bounces?> {
             override fun onResponse(call: Call<Bounces?>?,
