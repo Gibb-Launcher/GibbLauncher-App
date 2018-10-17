@@ -1,14 +1,16 @@
 package gibblauncher.gibblauncherapp.controller
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
@@ -21,6 +23,8 @@ import kotlinx.android.synthetic.main.fragment_training.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+
 
 class TrainingFragment : Fragment(), View.OnClickListener {
 
@@ -42,16 +46,14 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        progressBarFragmentTraining.visibility = View.VISIBLE
-        activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        val dialog = progressDialogChanges()
 
+        // TODO - Adicionar dados que serão mandados pra API
         val call = RetrofitInitializer().apiService().post()
         call.enqueue(object: Callback<Bounces?> {
             override fun onResponse(call: Call<Bounces?>?,
                                     response: Response<Bounces?>?) {
-                progressBarFragmentTraining.visibility = View.INVISIBLE
-                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                dialog.dismiss()
 
                 response?.body()?.let {
                     for(bounce in it.bounces)
@@ -61,15 +63,33 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
             override fun onFailure(call: Call<Bounces?>?,
                                    t: Throwable?) {
-                progressBarFragmentTraining.visibility = View.INVISIBLE
-                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
+                dialog.dismiss()
 
                 Log.d("Response", t?.message)
             }
         })
+    }
 
-        context.toast("Iniciando treinamento.")
+    private fun progressDialogChanges(): ProgressDialog {
+        var dialog = createDialog("Enviando informações para o lançador!")
+
+        val handler = Handler()
+        handler.postDelayed({ dialog.setMessage("Iniciando treinamento!") }, 3000)
+        handler.postDelayed({ dialog.setMessage("Analizando jogadas!") }, 10000)
+
+
+        return dialog
+    }
+
+    private fun createDialog(message: String): ProgressDialog {
+        val dialog = ProgressDialog(context)
+        dialog.setMessage(message)
+        dialog.setTitle("")
+        dialog.setCancelable(false)
+        dialog.isIndeterminate = true
+        dialog.show()
+
+        return dialog
     }
 
     private fun initializeTrainingData(trainingTitle: String) {
