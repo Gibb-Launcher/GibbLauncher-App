@@ -85,7 +85,10 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                                     trainingShotTenTrainingFragment.text.toString())
 
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots) }
+
+        val ip : String = activity.intent.extras.getString("IP")
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots, ip) }
 
         return trainingDataApi
     }

@@ -4,6 +4,7 @@ package gibblauncher.gibblauncherapp.controller
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiConfiguration
+import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -12,9 +13,11 @@ import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import gibblauncher.gibblauncherapp.R
+import java.lang.Thread.sleep
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
+        private val GIBBlAUNCHER_NETWORK : String = "Softway-2.4"
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
         private lateinit var key: String
@@ -47,7 +50,8 @@ class WifiConnectActivity : AppCompatActivity() {
         wm.enableNetwork(wifiConfig!!.networkId,true)
         wm.reconnect()
         Toast.makeText(applicationContext, R.string.device_connected, Toast.LENGTH_SHORT).show()
-        changeActivity()
+        sleep(800)
+        changeActivity(wm)
         Log.d(TAG, "intiated connection to SSID$ssid")
     }
 
@@ -102,9 +106,34 @@ class WifiConnectActivity : AppCompatActivity() {
         key = String.format("\"%s\"", configurationNetwork[1])
     }
 
-    private fun changeActivity(){
-        var intent : Intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+    private fun checkIsConnetedGibbNetwork(wifiInfo : WifiInfo): Boolean{
+
+        val currentConnectedSSID = wifiInfo.ssid.replace("\"", "")
+        val currentConnetedBSSID = wifiInfo.bssid
+        return currentConnectedSSID == GIBBlAUNCHER_NETWORK && currentConnetedBSSID != null
+    }
+
+    private fun changeActivity (wifiManager : WifiManager){
+        val wifiInfo = wifiManager.connectionInfo
+        val isConnectedGibbNetwork = checkIsConnetedGibbNetwork(wifiInfo)
+
+        var intent : Intent
+
+        if(isConnectedGibbNetwork){
+            intent = Intent(this, MainActivity::class.java)
+            val ip = getIP(wifiManager)
+            intent.putExtra("IP", ip)
+            finish()
+            startActivity(intent)
+
+        } else{
+            Toast.makeText(applicationContext, "O dispositivo não está na rede do GibbLauncher", Toast.LENGTH_LONG).show()
+        }
+
+    }
+    private fun getIP(wifiManager: WifiManager) : String {
+        val ipAddress = wifiManager.connectionInfo.ipAddress
+        val ip = String.format("%d.%d.%d.%d", ipAddress and 0xff, ipAddress shr 8 and 0xff, ipAddress shr 16 and 0xff, ipAddress shr 24 and 0xff)
+        return ip
     }
 }

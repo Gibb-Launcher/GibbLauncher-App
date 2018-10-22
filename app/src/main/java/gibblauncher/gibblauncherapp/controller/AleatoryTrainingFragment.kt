@@ -102,7 +102,9 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                 training.possibleShots[(0 until training.possibleShots.size).random()])
 
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots) }
+        val ip : String = activity.intent.extras.getString("IP")
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots, ip) }
 
         return trainingDataApi
     }

@@ -1,3 +1,3 @@
 package gibblauncher.gibblauncherapp.model
 
-data class TrainingDataApi(var id: String, var launcherPosition: Int, var shots: List<String?>)
+data class TrainingDataApi(var id: String, var launcherPosition: Int, var shots: List<String?>, var ip: String)
