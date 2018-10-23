@@ -7,13 +7,7 @@ import io.realm.annotations.Required
 
 open class TrainingResult : RealmObject() {
 
-    @Required
-    @PrimaryKey
-    var id: String? = null
-    var launcherPosition: Int? = null
-    var shots: RealmList<String> = RealmList()
-    var isAleatory: Boolean = false
-    var possibleShots: RealmList<String> = RealmList()
+    var title: String? = null
     var bouncesX: RealmList<Float> = RealmList()
     var bouncesY: RealmList<Float> = RealmList()
 

@@ -14,11 +14,12 @@ import android.widget.Toast
 
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
-import gibblauncher.gibblauncherapp.model.Bounces
-import gibblauncher.gibblauncherapp.model.Training
-import gibblauncher.gibblauncherapp.model.TrainingDataApi
+import gibblauncher.gibblauncherapp.model.*
 import io.realm.Realm
+import io.realm.exceptions.RealmPrimaryKeyConstraintException
+import io.realm.kotlin.createObject
 import io.realm.kotlin.where
+import kotlinx.android.synthetic.main.fragment_select_training.*
 import kotlinx.android.synthetic.main.fragment_training.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,6 +29,9 @@ import retrofit2.Response
 
 class TrainingFragment : Fragment(), View.OnClickListener {
 
+    private lateinit var realm: Realm
+    private var trainingTitle: String? = null
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_training, container, false)
@@ -36,7 +40,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val trainingTitle = arguments?.getString("trainingTitle")
+        trainingTitle = arguments?.getString("trainingTitle")
 
         (activity as AppCompatActivity).supportActionBar?.title = trainingTitle
 
@@ -55,8 +59,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                 dialog.dismiss()
 
                 response?.body()?.let {
-                    for(bounce in it.bounces)
-                        Log.d("Response", bounce.x.toString() + " " + bounce.y)
+                    saveBounceLocationInDatabase(it.bounces)
                 }
             }
 
@@ -67,6 +70,34 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                 Log.d("Response", t?.message)
             }
         })
+    }
+
+    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>) {
+        val title = trainingTitleSelectTrainingFragment.text
+
+        if(title != null && title.isNotEmpty()) {
+            // Open the realm for the UI thread.
+            realm = Realm.getDefaultInstance()
+
+            try {
+                realm.executeTransaction { realm ->
+                    // Add a Training
+                    val trainingResult = realm.createObject<TrainingResult>()
+                    trainingResult.title = trainingTitle
+
+                    for(bounce in bounces){
+                        trainingResult.bouncesX.add(bounce.x)
+                        trainingResult.bouncesY.add(bounce.y)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("Erro", e.message)
+            }
+
+
+        } else {
+            Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun trainingData(): TrainingDataApi? {
