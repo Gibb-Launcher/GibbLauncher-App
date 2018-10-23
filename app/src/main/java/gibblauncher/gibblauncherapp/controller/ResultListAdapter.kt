@@ -15,11 +15,14 @@ class ResultListAdapter(private val results: List<String>,
     var onItemClick: ((String) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        val result = results[position]
+        if(results != null){
+            val result = results[position]
 
-        holder?.let {
-            it.bindView(result)
+            holder?.let {
+                it.bindView(result)
+            }
         }
+
 
     }
 
@@ -29,7 +32,12 @@ class ResultListAdapter(private val results: List<String>,
     }
 
     override fun getItemCount(): Int {
-        return results.size
+        if (results != null){
+
+            return results.size
+        } else {
+            return 0
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

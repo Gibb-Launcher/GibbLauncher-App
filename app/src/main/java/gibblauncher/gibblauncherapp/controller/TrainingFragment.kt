@@ -24,7 +24,9 @@ import kotlinx.android.synthetic.main.fragment_training.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 
 class TrainingFragment : Fragment(), View.OnClickListener {
@@ -84,6 +86,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                     // Add a Training
                     val trainingResult = realm.createObject<TrainingResult>()
                     trainingResult.title = trainingTitle
+                    trainingResult.dateTrainingResult = Date()
 
                     for(bounce in bounces){
                         trainingResult.bouncesX.add(bounce.x)
