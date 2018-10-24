@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
 import gibblauncher.gibblauncherapp.model.*
@@ -19,12 +18,10 @@ import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_aleatory_training.*
-import kotlinx.android.synthetic.main.fragment_select_training.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-
 
 class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
 
@@ -99,12 +96,12 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                 realm.executeTransaction { realm ->
                     // Add a Training
                     val trainingResult = realm.createObject<TrainingResult>()
+                    trainingResult.id = nextId()
                     trainingResult.title = trainingTitle
                     trainingResult.dateTrainingResult = Date()
 
                     for(bounce in bounces){
-                        trainingResult.bouncesX.add(bounce.x)
-                        trainingResult.bouncesY.add(bounce.y)
+                        trainingResult.bouncesLocations.add(bounce)
                     }
                 }
             } catch (e: Exception) {
@@ -115,6 +112,18 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         } else {
             Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun nextId(): Int {
+        val currentIdNum = realm.where(TrainingResult::class.java).max("id")
+        val nextId: Int
+        if (currentIdNum == null) {
+            nextId = 1
+        } else {
+            nextId = currentIdNum!!.toInt() + 1
+        }
+
+        return nextId
     }
 
     private fun trainingData(): TrainingDataApi? {

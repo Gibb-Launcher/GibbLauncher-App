@@ -1,6 +1,4 @@
 package gibblauncher.gibblauncherapp.controller
-
-
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -9,14 +7,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_result_list.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ResultListFragment : Fragment() {
 
@@ -40,16 +35,22 @@ class ResultListFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
 
-        recyclerView.adapter = ResultListAdapter(results(), context)
+        recyclerView.adapter = ResultListAdapter(takeResultsInDatabase(), context)
         recyclerView.setHasFixedSize(true)
 
         (recyclerView.adapter as ResultListAdapter).onItemClick = { result ->
-           openHawkeyeResultFragment()
+           openHawkeyeResultFragment(result)
         }
     }
 
-    private fun openHawkeyeResultFragment() {
+    private fun openHawkeyeResultFragment(result: TrainingResult) {
         var hawkeyeResultFragment = HawkeyeResultFragment()
+
+       var bundle = Bundle()
+        bundle.putInt("id", result.id)
+
+        hawkeyeResultFragment.arguments = bundle
+
 
         fragmentManager
                 .beginTransaction()
@@ -63,28 +64,10 @@ class ResultListFragment : Fragment() {
         },1000)
     }
 
-    // TODO - Mudar para uma lista de resultados
-    private fun results(): List<String> {
-
-
-        return takeResultsInDatabase()
-    }
-
-    private fun takeResultsInDatabase(): List<String> {
+    private fun takeResultsInDatabase(): List<TrainingResult> {
         val realm = Realm.getDefaultInstance()
-        val results = realm.where<TrainingResult>().findAll()
-        var listTrainingResult : MutableList<String> = mutableListOf()
 
-        for(trainingResult in results){
-            listTrainingResult.add(trainingResult.title!! + "  -  " + formatDate(trainingResult.dateTrainingResult!!))
-        }
-
-        return  listTrainingResult
-    }
-
-    private  fun formatDate(date : Date) : String{
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-        return dateFormat.format(date)
+        return realm.where<TrainingResult>().findAll()
     }
 
 }

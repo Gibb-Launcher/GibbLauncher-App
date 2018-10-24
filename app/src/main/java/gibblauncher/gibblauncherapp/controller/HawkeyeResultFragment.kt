@@ -14,6 +14,10 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
+import gibblauncher.gibblauncherapp.model.TrainingResult
+import io.realm.Realm
+import io.realm.RealmList
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
 import java.util.*
 
@@ -22,9 +26,9 @@ class HawkeyeResultFragment : Fragment(){
     private var screenWidth = 0
     private var screenHeight = 0
     private var isShow: Boolean = false
-    private var bounceLocationIn: MutableList<BounceLocation> = createBounceLocations()
-    private var bounceLocationOut: MutableList<BounceLocation> = createBounceLocations()
-
+    private var bounceLocationIn: MutableList<BounceLocation> = mutableListOf()
+    private var bounceLocationOut: MutableList<BounceLocation> = mutableListOf()
+    var idTrainingResult : Int = -1
 
     fun displayBalls(){
         if (!isShow) {
@@ -49,13 +53,14 @@ class HawkeyeResultFragment : Fragment(){
     }
 
     private fun showBounceLocations(hawkeyeLayout: RelativeLayout?) {
-        val listOfBounceLocation: MutableList<BounceLocation> = createBounceLocations()
+        idTrainingResult = arguments.getInt("id")
+        val listOfBounceLocation: MutableList<BounceLocation> = takeResultsInDatabase()
 
         for ((index, bounceLocation) in listOfBounceLocation.withIndex()) {
-            if (bounceLocation.x >= 0 && bounceLocation.y >= 0) {
+            if (bounceLocation.x!! >= 0 && bounceLocation.y!! >= 0) {
                 val imageView = ImageView(this.context)
 
-                imageView.x = bounceLocation.x
+                imageView.x = bounceLocation.x!!
                 imageView.y = screenHeight + 50.0f
                 imageView.id = View.generateViewId()
 
@@ -113,7 +118,7 @@ class HawkeyeResultFragment : Fragment(){
         val header = view?.findViewById<CardView>(R.id.header_hawk)
 
         val marginParams = header?.layoutParams as ViewGroup.MarginLayoutParams
-        val y = bounceLocation.y + header.y + header.height + marginParams.bottomMargin
+        val y = bounceLocation.y!! + header.y + header.height + marginParams.bottomMargin
 
         val sideCurve = if (index % 2 == 0) -1 else 1
 
@@ -160,13 +165,13 @@ class HawkeyeResultFragment : Fragment(){
     private fun createBounceLocations(): MutableList<BounceLocation> {
         val listOfBounceLocation: MutableList<BounceLocation> = mutableListOf()
 
-        for (index in 0..9) {
-            val x = rand(-1000, 1000)
-            val y = rand(-1000, 1000)
-            val bounceLocation = BounceLocation(x.toFloat(), y.toFloat())
-            listOfBounceLocation.add(bounceLocation)
-        }
         return listOfBounceLocation
+    }
+
+    private fun takeResultsInDatabase(): RealmList<BounceLocation> {
+        val realm = Realm.getDefaultInstance()
+
+        return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!.bouncesLocations
     }
 
     private fun getScreenMetrics() {
@@ -176,8 +181,5 @@ class HawkeyeResultFragment : Fragment(){
         screenWidth = displayMetrics.widthPixels
         screenHeight = displayMetrics.heightPixels
     }
-
-    private fun rand(initial: Int, final: Int) = Random().nextInt(final + 1 - initial) + initial
-
 
 }

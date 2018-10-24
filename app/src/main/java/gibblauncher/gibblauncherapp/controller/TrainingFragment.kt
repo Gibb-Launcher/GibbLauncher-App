@@ -86,11 +86,11 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                     // Add a Training
                     val trainingResult = realm.createObject<TrainingResult>()
                     trainingResult.title = trainingTitle
+                    trainingResult.id = nextId()
                     trainingResult.dateTrainingResult = Date()
 
                     for(bounce in bounces){
-                        trainingResult.bouncesX.add(bounce.x)
-                        trainingResult.bouncesY.add(bounce.y)
+                        trainingResult.bouncesLocations.add(bounce)
                     }
                 }
             } catch (e: Exception) {
@@ -101,6 +101,18 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         } else {
             Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun nextId(): Int {
+        val currentIdNum = realm.where(TrainingResult::class.java).max("id")
+        val nextId: Int
+        if (currentIdNum == null) {
+            nextId = 1
+        } else {
+            nextId = currentIdNum!!.toInt() + 1
+        }
+
+        return nextId
     }
 
     private fun trainingData(): TrainingDataApi? {

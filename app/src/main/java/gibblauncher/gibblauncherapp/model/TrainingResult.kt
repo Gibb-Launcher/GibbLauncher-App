@@ -6,9 +6,9 @@ import java.util.*
 
 open class TrainingResult : RealmObject() {
 
+    var id: Int = 0
     var title: String? = null
-    var bouncesX: RealmList<Float> = RealmList()
-    var bouncesY: RealmList<Float> = RealmList()
+    var bouncesLocations: RealmList<BounceLocation> = RealmList()
     var dateTrainingResult : Date? = null
 
 }

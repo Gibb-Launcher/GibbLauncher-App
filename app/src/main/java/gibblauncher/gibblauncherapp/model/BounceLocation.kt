@@ -1,3 +1,8 @@
 package gibblauncher.gibblauncherapp.model
 
-data class BounceLocation(val x: Float, val y: Float)
+import io.realm.RealmObject
+
+open class BounceLocation: RealmObject(){
+    var x: Float? = null
+    var y: Float? = null
+}
