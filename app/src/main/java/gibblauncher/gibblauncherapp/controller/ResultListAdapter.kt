@@ -6,20 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import gibblauncher.gibblauncherapp.R
+import gibblauncher.gibblauncherapp.model.Training
+import gibblauncher.gibblauncherapp.model.TrainingResult
 import kotlinx.android.synthetic.main.result_item.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO - Mudar a lista recebida para uma lista de resultados
-class ResultListAdapter(private val results: List<String>,
+class ResultListAdapter(private val results: List<TrainingResult>,
                           private val context: Context) : RecyclerView.Adapter<ResultListAdapter.ViewHolder>() {
     // TODO - Mudar String para result
-    var onItemClick: ((String) -> Unit)? = null
+    var onItemClick: ((TrainingResult) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        val result = results[position]
+        if(results != null){
+            val result = results.get(position)
 
-        holder?.let {
-            it.bindView(result)
+            holder?.let {
+                it.bindView(result)
+            }
         }
+
 
     }
 
@@ -29,7 +36,12 @@ class ResultListAdapter(private val results: List<String>,
     }
 
     override fun getItemCount(): Int {
-        return results.size
+        if (results != null){
+
+            return results.size
+        } else {
+            return 0
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,11 +51,16 @@ class ResultListAdapter(private val results: List<String>,
                 onItemClick?.invoke(results[adapterPosition])
             }
         }
-        // TODO - Mudar o result para result
-        fun bindView(result: String) {
+
+        fun bindView(result: TrainingResult) {
             val resultNumber = itemView.resultItemTitle
 
-            resultNumber.text = result
+            resultNumber.text = result.title + "   -   " +formatDate(result.dateTrainingResult!!)
+        }
+
+        private  fun formatDate(date : Date) : String{
+            val dateFormat = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+            return dateFormat.format(date)
         }
     }
 

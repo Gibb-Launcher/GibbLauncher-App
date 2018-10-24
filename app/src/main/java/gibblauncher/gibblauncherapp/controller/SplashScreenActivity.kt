@@ -15,7 +15,7 @@ import android.support.v4.content.ContextCompat
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val GIBBlAUNCHER_NETWORK : String = "GibbLauncher"
+    private val GIBBlAUNCHER_NETWORK : String = "Softway-2.4"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,11 +74,19 @@ class SplashScreenActivity : AppCompatActivity() {
 
         if(isConnectedGibbNetwork){
             intent = Intent(this, MainActivity::class.java)
+            val ip = getIP(wifiManager)
+            intent.putExtra("IP", ip)
 
         } else{
             intent = Intent(this, WifiConnectActivity::class.java)
         }
         finish()
         startActivity(intent)
+    }
+
+    private fun getIP(wifiManager: WifiManager) : String {
+        val ipAddress = wifiManager.connectionInfo.ipAddress
+        val ip = String.format("%d.%d.%d.%d", ipAddress and 0xff, ipAddress shr 8 and 0xff, ipAddress shr 16 and 0xff, ipAddress shr 24 and 0xff)
+        return ip
     }
 }

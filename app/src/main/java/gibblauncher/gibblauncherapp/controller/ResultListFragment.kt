@@ -1,6 +1,4 @@
 package gibblauncher.gibblauncherapp.controller
-
-
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -9,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import gibblauncher.gibblauncherapp.R
+import gibblauncher.gibblauncherapp.model.TrainingResult
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_result_list.*
 
 class ResultListFragment : Fragment() {
@@ -35,16 +35,22 @@ class ResultListFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
 
-        recyclerView.adapter = ResultListAdapter(results(), context)
+        recyclerView.adapter = ResultListAdapter(takeResultsInDatabase(), context)
         recyclerView.setHasFixedSize(true)
 
         (recyclerView.adapter as ResultListAdapter).onItemClick = { result ->
-           openHawkeyeResultFragment()
+           openHawkeyeResultFragment(result)
         }
     }
 
-    private fun openHawkeyeResultFragment() {
+    private fun openHawkeyeResultFragment(result: TrainingResult) {
         var hawkeyeResultFragment = HawkeyeResultFragment()
+
+       var bundle = Bundle()
+        bundle.putInt("id", result.id)
+
+        hawkeyeResultFragment.arguments = bundle
+
 
         fragmentManager
                 .beginTransaction()
@@ -58,9 +64,10 @@ class ResultListFragment : Fragment() {
         },1000)
     }
 
-    // TODO - Mudar para uma lista de resultados
-    private fun results(): List<String> {
-        return arrayListOf("Resultado um", "Resultado dois", "Resultado três")
+    private fun takeResultsInDatabase(): List<TrainingResult> {
+        val realm = Realm.getDefaultInstance()
+
+        return realm.where<TrainingResult>().findAll()
     }
 
 }
