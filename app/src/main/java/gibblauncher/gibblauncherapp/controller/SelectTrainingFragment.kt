@@ -59,6 +59,7 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.main_container, trainingListFragment)
+                .addToBackStack(null)
                 .commit()
     }
 

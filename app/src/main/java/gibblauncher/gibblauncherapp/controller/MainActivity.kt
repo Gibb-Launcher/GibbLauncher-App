@@ -87,12 +87,6 @@ class MainActivity : AppCompatActivity() {
                             .show(fragment3)
                             .commit()
                     active = fragment3
-                    /*
-                    val handler = Handler()
-                    handler.postDelayed(Runnable {
-                        fragment3.displayBalls()
-                    },1000)
-                    */
                     return true
                 }
             }

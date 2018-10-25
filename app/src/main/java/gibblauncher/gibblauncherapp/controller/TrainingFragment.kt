@@ -69,7 +69,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                                    t: Throwable?) {
                 dialog.dismiss()
 
-                Log.d("Response", t?.message)
+                Toast.makeText(context, "Erro na conexão com o lançador!", Toast.LENGTH_SHORT).show()
             }
         })
     }

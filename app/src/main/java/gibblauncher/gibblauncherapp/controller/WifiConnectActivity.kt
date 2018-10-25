@@ -17,7 +17,7 @@ import java.lang.Thread.sleep
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
-        private val GIBBlAUNCHER_NETWORK : String = "Softway-2.4"
+        private val GIBBlAUNCHER_NETWORK : String = "GVT-F243"
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
         private lateinit var key: String
