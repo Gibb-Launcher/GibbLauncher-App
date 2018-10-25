@@ -103,6 +103,7 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                     for(bounce in bounces){
                         trainingResult.bouncesLocations.add(bounce)
                     }
+                    activity.onBackPressed()
                 }
             } catch (e: Exception) {
                 Log.d("Erro", e.message)

@@ -92,11 +92,11 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                     for(bounce in bounces){
                         trainingResult.bouncesLocations.add(bounce)
                     }
+                    activity.onBackPressed()
                 }
             } catch (e: Exception) {
                 Log.d("Erro", e.message)
             }
-
 
         } else {
             Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
