@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,15 +53,11 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
         saveTrainingInDatabase()
 
         context.toast("Treino salvo com sucesso!")
-
-        var trainingListFragment = TrainingListFragment()
-
-        fragmentManager.popBackStack()
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, trainingListFragment)
-                .addToBackStack(null)
+                .replace(R.id.main_container, BlankFragment())
                 .commit()
+        activity.onBackPressed()
     }
 
 
@@ -137,6 +134,30 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
         spinnerTrainingEight.isEnabled = change
         spinnerTrainingNine.isEnabled = change
         spinnerTrainingTen.isEnabled = change
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (view == null) {
+            return
+        }
+
+        view!!.isFocusableInTouchMode = true
+        view!!.requestFocus()
+        view!!.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+
+                return if (event.action === KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.main_container, BlankFragment())
+                            .commit()
+                    activity.onBackPressed()
+                    true
+                } else false
+            }
+        })
     }
 
     fun Context.toast(message: CharSequence) =
