@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -20,9 +21,12 @@ import io.realm.RealmList
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
 import java.util.*
+import android.view.KeyEvent.KEYCODE_BACK
+import android.widget.Toast
 
 
 class HawkeyeResultFragment : Fragment(){
+    private var finish = false
     private var screenWidth = 0
     private var screenHeight = 0
     private var isShow: Boolean = false
@@ -91,7 +95,7 @@ class HawkeyeResultFragment : Fragment(){
 
                     bounceIn?.text = bouncesIn.toString()
                     percent?.text = "%.2f".format(percentIn) + "%"
-                },index * 1000L + 1000L)
+                },0)
             } else{
                 bounceLocationOut.add(bounceLocation)
                 val handler = Handler()
@@ -106,7 +110,7 @@ class HawkeyeResultFragment : Fragment(){
 
                     bounceout?.text = bouncesOut.toString()
                     percent?.text = "%.2f".format(percentIn) + "%"
-                },index * 1000L + 1000L)
+                },0)
             }
         }
     }
@@ -127,8 +131,9 @@ class HawkeyeResultFragment : Fragment(){
                 imageView.x, y)
 
         ObjectAnimator.ofFloat(imageView, View.X, View.Y, path).apply {
-            duration = 1000
-            startDelay = 1000L * index
+            finish = true
+            duration = 0
+            startDelay = 0L
             start()
         }
     }
@@ -159,7 +164,7 @@ class HawkeyeResultFragment : Fragment(){
 
         Handler().postDelayed({
             hawkeyeLayout?.removeView(toolTip)
-        }, 1000L)
+        }, 0)
     }
 
     private fun createBounceLocations(): MutableList<BounceLocation> {
@@ -180,6 +185,30 @@ class HawkeyeResultFragment : Fragment(){
 
         screenWidth = displayMetrics.widthPixels
         screenHeight = displayMetrics.heightPixels
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (view == null) {
+            return
+        }
+
+        view!!.isFocusableInTouchMode = true
+        view!!.requestFocus()
+        view!!.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+
+                return if (event.action === KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    if(!finish) {
+                        Toast.makeText(context, "Espere os resultados serem mostrados!", Toast.LENGTH_LONG).show()
+                    } else {
+                        activity.onBackPressed()
+                    }
+                    true
+                } else false
+            }
+        })
     }
 
 }
