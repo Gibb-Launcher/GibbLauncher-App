@@ -75,7 +75,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>) {
-        val title = trainingTitleSelectTrainingFragment.text
+        val title = trainingPositionTrainingFragment.text
 
         if(title != null && title.isNotEmpty()) {
             // Open the realm for the UI thread.
@@ -143,8 +143,8 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         var dialog = createDialog("Enviando informações para o lançador!")
 
         val handler = Handler()
-        handler.postDelayed({ dialog.setMessage("Iniciando treinamento!") }, 3000)
-        handler.postDelayed({ dialog.setMessage("Analizando jogadas!") }, 10000)
+        handler.postDelayed({ dialog.setMessage("Iniciando treinamento!") }, 1000)
+        handler.postDelayed({ dialog.setMessage("Analizando jogadas!") }, 1000)
 
 
         return dialog
