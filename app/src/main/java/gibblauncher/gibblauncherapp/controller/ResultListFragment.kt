@@ -61,7 +61,7 @@ class ResultListFragment : Fragment() {
         val handler = Handler()
         handler.postDelayed(Runnable {
             hawkeyeResultFragment.displayBalls()
-        },1000)
+        },100)
     }
 
     private fun takeResultsInDatabase(): List<TrainingResult> {

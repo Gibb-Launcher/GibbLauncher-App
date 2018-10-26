@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -17,12 +16,11 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
-import io.realm.RealmList
 import io.realm.kotlin.where
-import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
-import java.util.*
-import android.view.KeyEvent.KEYCODE_BACK
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HawkeyeResultFragment : Fragment(){
@@ -37,7 +35,8 @@ class HawkeyeResultFragment : Fragment(){
     fun displayBalls(){
         if (!isShow) {
             val hawkeyeLayout = view?.findViewById<RelativeLayout>(R.id.hawkeye_result)
-
+            idTrainingResult = arguments.getInt("id")
+            showHeader()
             showBounceLocations(hawkeyeLayout)
             this.isShow = true
         }
@@ -56,9 +55,25 @@ class HawkeyeResultFragment : Fragment(){
         return inflater.inflate(R.layout.fragment_hawkeye_result, container, false)
     }
 
+    private fun showHeader() {
+        var result = takeResultsInDatabase()
+        name_training.text = result.title
+        hour_hawkeye.text = formatHour(result.dateTrainingResult!!)
+        date_training.text = formatDate(result.dateTrainingResult!!)
+    }
+
+    private  fun formatDate(date : Date) : String{
+        val dateFormat = SimpleDateFormat("dd MMM yyyy")
+        return dateFormat.format(date)
+    }
+
+    private  fun formatHour(date : Date) : String{
+        val dateFormat = SimpleDateFormat("HH:mm:ss")
+        return dateFormat.format(date)
+    }
+
     private fun showBounceLocations(hawkeyeLayout: RelativeLayout?) {
-        idTrainingResult = arguments.getInt("id")
-        val listOfBounceLocation: MutableList<BounceLocation> = takeResultsInDatabase()
+        val listOfBounceLocation: MutableList<BounceLocation> = takeResultsInDatabase().bouncesLocations
 
         for ((index, bounceLocation) in listOfBounceLocation.withIndex()) {
             if (bounceLocation.x!! >= 0 && bounceLocation.y!! >= 0) {
@@ -173,10 +188,10 @@ class HawkeyeResultFragment : Fragment(){
         return listOfBounceLocation
     }
 
-    private fun takeResultsInDatabase(): RealmList<BounceLocation> {
+    private fun takeResultsInDatabase(): TrainingResult {
         val realm = Realm.getDefaultInstance()
 
-        return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!.bouncesLocations
+        return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!
     }
 
     private fun getScreenMetrics() {

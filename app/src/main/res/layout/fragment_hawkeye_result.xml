@@ -39,7 +39,7 @@
                     android:src="@drawable/logo" />
 
                 <TextView
-                    android:id="@+id/title_hawkeye"
+                    android:id="@+id/hour_hawkeye"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/hawk_logo"
@@ -51,7 +51,7 @@
                     android:id="@+id/name_training"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_hawkeye"
+                    android:layout_below="@+id/hour_hawkeye"
                     android:layout_toEndOf="@+id/hawk_logo"
                     android:paddingStart="30dp"
                     android:text="Treino #1"
@@ -59,7 +59,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/number_training"
+                    android:id="@+id/date_training"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/name_training"
