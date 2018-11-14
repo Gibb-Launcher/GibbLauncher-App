@@ -106,9 +106,9 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
     private fun filteringShots() {
         when(position) {
-            0 -> myShoots = arrayOf("Direita", "Centro")
-            1 -> myShoots = arrayOf("Esquerda", "Centro", "Direita")
-            2 -> myShoots = arrayOf("Esquerda", "Centro")
+            2 -> myShoots = arrayOf("Forehand Cruzado - Longo", "Backhand Cruzado - Centro", "Backhand Paralelo - Longo", "Forehand Cruzado - Curto", "Backhand Paralelo - Curto")
+            1 -> myShoots = arrayOf("Forehand Cruzado - Longo", "Backhand Paralelo - Centro", "Backhand Cruzado - Longo", "Forehand Cruzado - Curto", "Backhand Cruzado - Curto")
+            0 -> myShoots = arrayOf("Forehand Paralelo - Longo", "Backhand Cruzado - Centro", "Backhand Cruzado - Longo", "Forehand Paralelo - Curto", "Backhand Cruzado - Curto")
         }
     }
 
