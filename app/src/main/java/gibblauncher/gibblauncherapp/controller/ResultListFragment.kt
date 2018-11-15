@@ -67,7 +67,9 @@ class ResultListFragment : Fragment() {
     private fun takeResultsInDatabase(): List<TrainingResult> {
         val realm = Realm.getDefaultInstance()
 
-        return realm.where<TrainingResult>().findAll()
+        val listTraining = realm.where<TrainingResult>().findAll()
+
+        return listTraining.reversed()
     }
 
 }
