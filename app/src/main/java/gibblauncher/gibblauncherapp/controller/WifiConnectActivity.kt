@@ -1,23 +1,33 @@
 package gibblauncher.gibblauncherapp.controller
 
 
+import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.os.Bundle
+import android.os.*
+import android.support.v4.app.NotificationCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import gibblauncher.gibblauncherapp.R
+import gibblauncher.gibblauncherapp.helper.ExampleService
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import java.lang.Thread.sleep
+import java.net.ServerSocket
+
+
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
-        private val GIBBlAUNCHER_NETWORK : String = "GVT-F243"
+        private val GIBBlAUNCHER_NETWORK : String = "GibbLauncher"
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
         private lateinit var key: String
@@ -35,8 +45,10 @@ class WifiConnectActivity : AppCompatActivity() {
         var btQrcode: Button = findViewById(R.id.bt_QRCode)
 
         btQrcode.setOnClickListener { openQRCode() }
-
     }
+
+
+
 
     private fun connectToWPAWiFi(ssid:String, pass:String){
         val wm:WifiManager= applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -78,6 +90,7 @@ class WifiConnectActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int,resultCode: Int, data: Intent?) {
+
         var result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if(result != null){
             if(result.contents != null){
@@ -136,4 +149,12 @@ class WifiConnectActivity : AppCompatActivity() {
         val ip = String.format("%d.%d.%d.%d", ipAddress and 0xff, ipAddress shr 8 and 0xff, ipAddress shr 16 and 0xff, ipAddress shr 24 and 0xff)
         return ip
     }
+
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+
+
 }

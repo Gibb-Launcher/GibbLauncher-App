@@ -9,19 +9,27 @@ import android.net.wifi.WifiInfo
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
-
+import java.net.ServerSocket
+import android.util.Log
+import android.widget.Toast
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import android.app.NotificationManager
+import android.os.Handler
 
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val GIBBlAUNCHER_NETWORK : String = "GVT-F243"
+    private val GIBBlAUNCHER_NETWORK : String = "GibbLauncher"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         checkPermition()
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -89,4 +97,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val ip = String.format("%d.%d.%d.%d", ipAddress and 0xff, ipAddress shr 8 and 0xff, ipAddress shr 16 and 0xff, ipAddress shr 24 and 0xff)
         return ip
     }
+
+    fun Context.toast(message: CharSequence) =
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

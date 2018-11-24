@@ -18,6 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".helper.ExampleService"
+            android:enabled="true"
+            android:exported="true"
+            android:launchMode="singleTask" />
+
         <activity
             android:name=".controller.MainActivity"
             android:screenOrientation="portrait"
