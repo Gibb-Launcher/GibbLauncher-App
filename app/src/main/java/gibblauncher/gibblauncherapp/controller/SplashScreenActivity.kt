@@ -10,12 +10,17 @@ import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-
+import android.util.Log
+import com.github.mikephil.charting.utils.Utils
+import java.net.NetworkInterface
+import java.net.NetworkInterface.getNetworkInterfaces
+import java.util.*
+import kotlin.experimental.and
 
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val GIBBlAUNCHER_NETWORK : String = "GVT-F243"
+    private val GIBBlAUNCHER_NETWORK : String = "VIVO-287E"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +80,9 @@ class SplashScreenActivity : AppCompatActivity() {
         if(isConnectedGibbNetwork){
             intent = Intent(this, MainActivity::class.java)
             val ip = getIP(wifiManager)
+            val mac = getMAC(wifiManager)
             intent.putExtra("IP", ip)
+            intent.putExtra("MAC", mac)
 
         } else{
             intent = Intent(this, WifiConnectActivity::class.java)
@@ -88,5 +95,35 @@ class SplashScreenActivity : AppCompatActivity() {
         val ipAddress = wifiManager.connectionInfo.ipAddress
         val ip = String.format("%d.%d.%d.%d", ipAddress and 0xff, ipAddress shr 8 and 0xff, ipAddress shr 16 and 0xff, ipAddress shr 24 and 0xff)
         return ip
+    }
+
+    private fun getMAC(wifiManager: WifiManager) : String {
+        try {
+            val all = Collections.list(NetworkInterface.getNetworkInterfaces())
+            for (nif in all) {
+                if (!nif.getName().equals("wlan0", ignoreCase = true)) continue
+
+                val macBytes = nif.getHardwareAddress() ?: return ""
+
+                Log.d("MAC", macBytes.toString())
+
+
+                val res1 = StringBuilder()
+                for (b in macBytes) {
+                    // res1.append(Integer.toHexString(b & 0xFF) + ":");
+                    res1.append(String.format("%02X:", b))
+                }
+                Log.d("MAC2 ", res1.toString())
+
+
+                if (res1.length > 0) {
+                    res1.deleteCharAt(res1.length - 1)
+                }
+                return res1.toString()
+            }
+        } catch (ex: Exception) {
+        }
+
+        return "02:00:00:00:00:00"
     }
 }
