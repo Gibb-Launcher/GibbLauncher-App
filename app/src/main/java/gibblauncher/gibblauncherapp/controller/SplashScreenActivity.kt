@@ -19,6 +19,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import android.app.NotificationManager
 import android.os.Handler
+import gibblauncher.gibblauncherapp.helper.NotificationService
 
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -30,6 +31,8 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         checkPermition()
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,

@@ -1,28 +1,20 @@
 package gibblauncher.gibblauncherapp.controller
 
 
-import android.app.Activity
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.*
-import android.support.v4.app.NotificationCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import gibblauncher.gibblauncherapp.R
-import gibblauncher.gibblauncherapp.helper.ExampleService
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
+import gibblauncher.gibblauncherapp.helper.NotificationService
 import java.lang.Thread.sleep
-import java.net.ServerSocket
-
 
 
 class WifiConnectActivity : AppCompatActivity() {
@@ -45,6 +37,9 @@ class WifiConnectActivity : AppCompatActivity() {
         var btQrcode: Button = findViewById(R.id.bt_QRCode)
 
         btQrcode.setOnClickListener { openQRCode() }
+
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
     }
 
 

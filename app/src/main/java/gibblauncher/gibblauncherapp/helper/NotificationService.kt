@@ -23,7 +23,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.ServerSocket
 
-class ExampleService : IntentService("ExampleService") {
+class NotificationService : IntentService("NotificationService") {
     var server : ServerSocket? = null
     var cont: Int = 1
 
@@ -47,7 +47,7 @@ class ExampleService : IntentService("ExampleService") {
                         InputStreamReader(socket?.getInputStream()))
 
                 val str = rec.readLine()
-                showToast(str)
+                //showToast(str)
                 showNotification(str)
                 rec.close()
                 socket?.close()
@@ -70,7 +70,7 @@ class ExampleService : IntentService("ExampleService") {
                 val notificationIntent = Intent(applicationContext, MainActivity::class.java)
                 val contentIntent = PendingIntent.getActivity(applicationContext, 0, notificationIntent, 0)
 
-                var notificationBuilder = NotificationCompat.Builder(applicationContext, "MyChanel")
+                var notificationBuilder = NotificationCompat.Builder(applicationContext, "Canal")
                         .setContentTitle("Resultado do Treino")
                         .setContentText(msg)
                         .setSmallIcon(R.drawable.glogo)
@@ -84,8 +84,8 @@ class ExampleService : IntentService("ExampleService") {
 
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val channel = NotificationChannel("MyChanel",
-                            "Channel human readable title",
+                    val channel = NotificationChannel("Canal",
+                            "Titulo do Canal",
                             NotificationManager.IMPORTANCE_DEFAULT)
                     notificationManager.createNotificationChannel(channel)
                 }
