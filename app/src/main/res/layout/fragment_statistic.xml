@@ -41,7 +41,7 @@
                             android:id="@+id/labelSkills"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Skills"
+                            android:text="Tipos de Jogadas"
                             android:textAlignment="center"
                             android:textSize="30sp"
                             android:textStyle="bold" />
@@ -170,7 +170,7 @@
                             android:id="@+id/play_label"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Jogadas Realizadas"
+                            android:text="Rebatidas"
                             android:textAlignment="center"
                             android:textSize="30sp"
                             android:textStyle="bold" />

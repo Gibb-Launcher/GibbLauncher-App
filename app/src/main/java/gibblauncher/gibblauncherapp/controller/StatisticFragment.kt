@@ -19,21 +19,27 @@ import com.github.mikephil.charting.data.RadarData
 import android.graphics.Color
 import com.github.mikephil.charting.data.RadarDataSet
 import android.app.DatePickerDialog
+import android.util.Log
+import gibblauncher.gibblauncherapp.model.BounceLocation
+import gibblauncher.gibblauncherapp.model.Training
+import gibblauncher.gibblauncherapp.model.TrainingResult
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_statistic.*
 import java.util.*
 
 
 class StatisticFragment : Fragment() {
-    private val yData = floatArrayOf(20f, 10f, 20f, 10f, 40f)
-    private val xData = arrayOf("Jogada 1", "Jogada 2", "Jogada 3", "Jogada 4", "Jogada 5")
-
     private var initialYear: Int? = 0
     private var initialMonth: Int? = 0
     private var initialDay: Int? = 0
     private var finalYear: Int? = 0
     private var finalMonth: Int? = 0
     private var finalDay: Int? = 0
-
+    private lateinit var realm : Realm
+    private lateinit var listTrainingResults : List<TrainingResult>
+    private lateinit var listTraining : List<Training>
+    private lateinit var listBounceLocation : List<BounceLocation>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,6 +48,13 @@ class StatisticFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+       realm = Realm.getDefaultInstance()
+
+        listTrainingResults = realm.where<TrainingResult>().findAll()
+        listTraining = realm.where<Training>().findAll()
+        listBounceLocation = realm.where<BounceLocation>().findAll()
+
+
         clickListener()
         createPieChart()
         createBarChartPosition()
@@ -85,9 +98,27 @@ class StatisticFragment : Fragment() {
 
     private fun createPieChart() {
         val description = Description()
+        var bounceIn = 0
+        var bounceOut = 0
+
+        listBounceLocation.forEach{
+            if(it.x!! > 0 && it.y!! > 0 ){
+                bounceIn++
+            } else {
+                bounceOut++
+            }
+        }
+
+        val percentIn = (100.0F*bounceIn) / listBounceLocation.size
+        val percentOut = (100.0F*bounceOut) / listBounceLocation.size
+
+
+        val yData = floatArrayOf(percentIn, percentOut)
+        val xData = arrayOf("Dentro", "Fora")
+
         description.text = "Jogadas Feitas (%)"
         pieChart.description = description
-        pieChart.isRotationEnabled = true
+        pieChart.isRotationEnabled = false
         pieChart.holeRadius = 50f
         pieChart.transparentCircleRadius = 57f
 
@@ -194,7 +225,7 @@ class StatisticFragment : Fragment() {
         xVals.add("Jogada 4")
         xVals.add("Jogada 5")
         xVals.add("Jogada 6")
-        xVals.add("Jogada 7")
+        xVals.add("Jogada 99")
 
         // Display labels for bars
         horizontalBarChart.xAxis.valueFormatter = IndexAxisValueFormatter(xVals)
@@ -230,24 +261,36 @@ class StatisticFragment : Fragment() {
     private fun createRadarChart() {
         val entries: MutableList<RadarEntry> = mutableListOf()
 
-        // TODO get training and plays
-        entries.add(RadarEntry (95f, "Treinos Vencidos"))
-        entries.add(RadarEntry (50f, "Jogadas da Esquerda"))
-        entries.add(RadarEntry (40f, "Jogadas Certas"))
-        entries.add(RadarEntry (70f, "Jogadas da Direita"))
-        entries.add(RadarEntry (50f, "Paralela"))
+        var countCenter = 0F
+        var countLong = 0F
+        var countShort = 0F
 
-        val dataSet = RadarDataSet(entries, "Skills")
+        listTrainingResults.forEach{
+            it.shots!!.forEach{
+                  if(it.contains("Centro")){
+                      countCenter++
+                  } else if(it.contains("Curto")){
+                      countShort++
+                  } else {
+                      countLong++
+                  }
+            }
+        }
+
+
+        entries.add(RadarEntry (countCenter, "Centro"))
+        entries.add(RadarEntry (countShort, "Curto"))
+        entries.add(RadarEntry (countLong, "Longo"))
+
+        val dataSet = RadarDataSet(entries, "Locais de Jogadas")
         dataSet.color = Color.BLUE
         dataSet.setDrawFilled(true)
 
         // Create the labels for the skills
         val xVals: MutableList<String> = mutableListOf()
-        xVals.add("Treinos Vencidos")
-        xVals.add("Jogadas da Esquerda")
-        xVals.add("Jogadas Certas")
-        xVals.add("Jogadas da Direita")
-        xVals.add("Paralela")
+        xVals.add("Centro")
+        xVals.add("Curto")
+        xVals.add("Longo")
 
         // Display labels for bars
         radarChart.xAxis.valueFormatter = IndexAxisValueFormatter(xVals)
@@ -263,4 +306,5 @@ class StatisticFragment : Fragment() {
 
         radarChart.invalidate()
     }
+
 }
