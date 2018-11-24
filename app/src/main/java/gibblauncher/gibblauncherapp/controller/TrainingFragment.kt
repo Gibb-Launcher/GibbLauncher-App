@@ -16,6 +16,8 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
 import gibblauncher.gibblauncherapp.model.*
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
@@ -62,6 +64,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                 dialog.dismiss()
 
                 response?.body()?.let {
+
                     saveBounceLocationInDatabase(it.bounces)
                 }
             }
@@ -80,7 +83,15 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
         if(title != null && title.isNotEmpty()) {
             // Open the realm for the UI thread.
-            realm = Realm.getDefaultInstance()
+            try {
+                Realm.init(context)
+                val config = RealmConfiguration.Builder()
+                        .deleteRealmIfMigrationNeeded()
+                        .build()
+                realm = Realm.getInstance(config)
+            } catch (ex: RealmMigrationNeededException) {
+                realm = Realm.getDefaultInstance()
+            }
 
             try {
                 realm.executeTransaction { realm ->
@@ -180,8 +191,17 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun takeTrainingInDatabase(trainingTitle: String): Training {
-        val realm = Realm.getDefaultInstance()
-        val results = realm.where<Training>().`in`("title", arrayOf(trainingTitle)).findFirst()
+        var realm:Realm? = null
+        try {
+            Realm.init(context)
+            val config = RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build()
+            realm = Realm.getInstance(config)
+        } catch (ex: RealmMigrationNeededException) {
+            realm = Realm.getDefaultInstance()
+        }
+        val results = realm!!.where<Training>().`in`("title", arrayOf(trainingTitle)).findFirst()
 
         return results as Training
     }

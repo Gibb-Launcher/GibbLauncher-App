@@ -20,7 +20,8 @@ import kotlin.experimental.and
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val GIBBlAUNCHER_NETWORK : String = "VIVO-287E"
+
+    private val GIBBlAUNCHER_NETWORK : String = "- (Logtel-40639001)"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

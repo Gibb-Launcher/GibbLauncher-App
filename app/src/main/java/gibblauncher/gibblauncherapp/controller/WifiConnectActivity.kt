@@ -19,7 +19,7 @@ import java.util.*
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
-        private val GIBBlAUNCHER_NETWORK : String = "VIVO-287E"
+        private val GIBBlAUNCHER_NETWORK : String = "- (Logtel-40639001)"
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
         private lateinit var key: String

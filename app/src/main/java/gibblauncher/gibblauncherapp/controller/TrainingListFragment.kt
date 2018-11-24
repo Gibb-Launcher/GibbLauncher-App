@@ -11,7 +11,10 @@ import android.view.ViewGroup
 
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.Training
+import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_training_list.*
 
@@ -91,9 +94,20 @@ class TrainingListFragment : Fragment() {
     }
 
     private fun trainings(): List<Training> {
-        val realm = Realm.getDefaultInstance()
-        val results = realm.where<Training>().findAll().toArray()
+        var realm:Realm? = null
+        try {
+            Realm.init(context)
+            val config = RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build()
+            realm = Realm.getInstance(config)
+        } catch (ex: RealmMigrationNeededException) {
+            realm = Realm.getDefaultInstance()
+        }
 
-        return results.map { it as Training }
+
+        val results = realm?.where<Training>()?.findAll()?.toArray()
+
+        return results!!.map { it as Training }
     }
 }

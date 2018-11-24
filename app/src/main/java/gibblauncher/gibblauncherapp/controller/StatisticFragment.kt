@@ -24,6 +24,8 @@ import gibblauncher.gibblauncherapp.model.BounceLocation
 import gibblauncher.gibblauncherapp.model.Training
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_statistic.*
 import java.util.*
@@ -48,7 +50,16 @@ class StatisticFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-       realm = Realm.getDefaultInstance()
+        try {
+            Realm.init(context)
+            val config = RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build()
+            realm = Realm.getInstance(config)
+        } catch (ex: RealmMigrationNeededException) {
+            realm = Realm.getDefaultInstance()
+        }
+
 
         listTrainingResults = realm.where<TrainingResult>().findAll()
         listTraining = realm.where<Training>().findAll()

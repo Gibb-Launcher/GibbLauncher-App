@@ -10,8 +10,12 @@ import android.view.ViewGroup
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_result_list.*
+import io.realm.exceptions.RealmMigrationNeededException
+
+
 
 class ResultListFragment : Fragment() {
 
@@ -65,11 +69,21 @@ class ResultListFragment : Fragment() {
     }
 
     private fun takeResultsInDatabase(): List<TrainingResult> {
-        val realm = Realm.getDefaultInstance()
+        var realm:Realm? = null
+        try {
+            Realm.init(context)
+            val config = RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build()
+            realm = Realm.getInstance(config)
+        } catch (ex: RealmMigrationNeededException) {
+            realm = Realm.getDefaultInstance()
+        }
 
-        val listTraining = realm.where<TrainingResult>().findAll()
 
-        return listTraining.reversed()
+        val listTraining = realm?.where<TrainingResult>()?.findAll()
+
+        return listTraining!!.reversed()
     }
 
 }

@@ -16,6 +16,9 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmList
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.kotlin.where
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
@@ -189,7 +192,18 @@ class HawkeyeResultFragment : Fragment(){
     }
 
     private fun takeResultsInDatabase(): TrainingResult {
-        val realm = Realm.getDefaultInstance()
+
+        var realm: Realm
+
+        try {
+            Realm.init(context)
+            val config = RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build()
+            realm = Realm.getInstance(config)
+        } catch (ex: RealmMigrationNeededException) {
+            realm = Realm.getDefaultInstance()
+        }
 
         return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!
     }
@@ -215,11 +229,8 @@ class HawkeyeResultFragment : Fragment(){
             override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
 
                 return if (event.action === KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    if(!finish) {
-                        Toast.makeText(context, "Espere os resultados serem mostrados!", Toast.LENGTH_LONG).show()
-                    } else {
-                        activity.onBackPressed()
-                    }
+                    activity.onBackPressed()
+
                     true
                 } else false
             }

@@ -16,6 +16,8 @@ import android.widget.Toast
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.Training
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
@@ -66,10 +68,19 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
         if(title != null && title.isNotEmpty()) {
             // Open the realm for the UI thread.
-            realm = Realm.getDefaultInstance()
+            var realm:Realm? = null
+            try {
+                Realm.init(context)
+                val config = RealmConfiguration.Builder()
+                        .deleteRealmIfMigrationNeeded()
+                        .build()
+                realm = Realm.getInstance(config)
+            } catch (ex: RealmMigrationNeededException) {
+                realm = Realm.getDefaultInstance()
+            }
 
             try {
-                realm.executeTransaction { realm ->
+                realm!!.executeTransaction { realm ->
                     // Add a Training
                     val training = realm.createObject<Training>(title.toString())
                     training.launcherPosition = position
