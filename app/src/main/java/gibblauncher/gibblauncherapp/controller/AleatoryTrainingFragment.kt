@@ -15,6 +15,7 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
 import gibblauncher.gibblauncherapp.model.*
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_aleatory_training.*
@@ -28,6 +29,7 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
     private var training = Training()
     private lateinit var realm: Realm
     private var trainingTitle: String? = null
+    private var saveShots: RealmList<String> = RealmList()
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -98,6 +100,7 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                     val trainingResult = realm.createObject<TrainingResult>()
                     trainingResult.id = nextId()
                     trainingResult.title = trainingTitle
+                    trainingResult.shots = this!!.saveShots!!
                     trainingResult.dateTrainingResult = Date()
 
                     for(bounce in bounces){
@@ -128,8 +131,6 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun trainingData(): TrainingDataApi? {
-        // TODO - fazer lógica pra pegar o ID no banco e incrementar
-        val id = "IdAleatorio"
         val launcherPosition = parseLauncherPositionString(trainingPositionAleatoryTrainingFragment.text.toString())
         val shots = listOf(training.possibleShots[(0 until training.possibleShots.size).random()],
                 training.possibleShots[(0 until training.possibleShots.size).random()],
@@ -142,10 +143,13 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                 training.possibleShots[(0 until training.possibleShots.size).random()],
                 training.possibleShots[(0 until training.possibleShots.size).random()])
 
+        saveShots!!.addAll(shots)
 
-            val ip : String = activity.intent.extras.getString("IP")
+        val ip : String = activity.intent.extras.getString("IP")
+        val mac : String = activity.intent.extras.getString("MAC")
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots, ip) }
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(trainingTitle, it+1, shots!!, ip, mac) }
 
         return trainingDataApi
     }

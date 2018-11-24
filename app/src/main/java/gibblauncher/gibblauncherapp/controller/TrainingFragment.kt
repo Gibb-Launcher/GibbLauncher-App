@@ -33,6 +33,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
     private lateinit var realm: Realm
     private var trainingTitle: String? = null
+    private lateinit var training:  Training
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -87,6 +88,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
                     val trainingResult = realm.createObject<TrainingResult>()
                     trainingResult.title = trainingTitle
                     trainingResult.id = nextId()
+                    trainingResult.shots = training.shots
                     trainingResult.dateTrainingResult = Date()
 
                     for(bounce in bounces){
@@ -116,8 +118,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun trainingData(): TrainingDataApi? {
-        // TODO - fazer lógica pra pegar o ID no banco e incrementar
-        val id = "IdAleatorio"
+
         val launcherPosition = parseLauncherPositionString(trainingPositionTrainingFragment.text.toString())
         val shots = listOf(trainingShotOneTrainingFragment.text.toString(),
                                     trainingShotTwoTrainingFragment.text.toString(),
@@ -133,8 +134,9 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
 
         val ip : String = activity.intent.extras.getString("IP")
+        val mac : String = activity.intent.extras.getString("MAC")
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots, ip) }
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(trainingTitle, it+1, shots, ip, mac) }
 
         return trainingDataApi
     }
@@ -162,7 +164,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initializeTrainingData(trainingTitle: String) {
-        var training = takeTrainingInDatabase(trainingTitle)
+        training = takeTrainingInDatabase(trainingTitle)
 
         trainingPositionTrainingFragment.setText(training.launcherPosition?.let { parseLauncherPosition(it) })
         trainingShotOneTrainingFragment.setText(training.shots[0])
