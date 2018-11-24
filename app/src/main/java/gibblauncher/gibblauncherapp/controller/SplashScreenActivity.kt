@@ -15,7 +15,7 @@ import android.support.v4.content.ContextCompat
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val GIBBlAUNCHER_NETWORK : String = "Softway-2.4"
+    private val GIBBlAUNCHER_NETWORK : String = "- (Logtel-40639001)"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

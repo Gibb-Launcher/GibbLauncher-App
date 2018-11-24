@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         Realm.init(this)
         val realmConfig = RealmConfiguration.Builder()
                 .name("gibblauncher.realm")
-                .schemaVersion(0)
+                .schemaVersion(1)
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
 
