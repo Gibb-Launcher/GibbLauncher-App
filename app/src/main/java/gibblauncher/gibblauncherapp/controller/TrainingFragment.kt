@@ -65,7 +65,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
                 response?.body()?.let {
 
-                    saveBounceLocationInDatabase(it.bounces)
+                    saveBounceLocationInDatabase(it.bounces, it.id_trainingResult)
                 }
             }
 
@@ -78,7 +78,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>) {
+    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>, id_trainingResult : Int) {
         val title = trainingPositionTrainingFragment.text
 
         if(title != null && title.isNotEmpty()) {
@@ -89,16 +89,13 @@ class TrainingFragment : Fragment(), View.OnClickListener {
             try {
                 realm.executeTransaction { realm ->
                     // Add a Training
-                    val trainingResult = realm.createObject<TrainingResult>()
-                    trainingResult.title = trainingTitle
-                    trainingResult.id = nextId()
-                    trainingResult.shots = training.shots
-                    trainingResult.dateTrainingResult = Date()
+                    var trainingResult = realm.where<TrainingResult>().equalTo("id", id_trainingResult).findFirst()
 
                     for(bounce in bounces){
-                        trainingResult.bouncesLocations.add(bounce)
+                        if (trainingResult != null) {
+                            trainingResult.bouncesLocations.add(bounce)
+                        }
                     }
-                    activity.onBackPressed()
                 }
             } catch (e: Exception) {
                 Log.d("Erro", e.message)
@@ -110,6 +107,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun nextId(): Int {
+        realm = Realm.getDefaultInstance()
         val currentIdNum = realm.where(TrainingResult::class.java).max("id")
         val nextId: Int
         if (currentIdNum == null) {
@@ -140,7 +138,24 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         val ip : String = activity.intent.extras.getString("IP")
         val mac : String = activity.intent.extras.getString("MAC")
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(trainingTitle, it+1, shots, ip, mac) }
+        var realm = Realm.getDefaultInstance()
+
+
+        try {
+            realm.executeTransaction { realm ->
+                // Add a Training
+                val trainingResult = realm.createObject<TrainingResult>()
+                trainingResult.title = trainingTitle
+                trainingResult.id = nextId()
+                trainingResult.shots = training.shots
+                trainingResult.dateTrainingResult = Date()
+            }
+        } catch (e: Exception) {
+            Log.d("Erro", e.message)
+        }
+
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(1, it+1, shots, ip, mac) }
 
         return trainingDataApi
     }
