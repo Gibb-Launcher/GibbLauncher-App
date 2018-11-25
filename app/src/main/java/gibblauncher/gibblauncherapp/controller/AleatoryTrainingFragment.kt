@@ -78,7 +78,7 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                 dialog.dismiss()
 
                 response?.body()?.let {
-                    saveBounceLocationInDatabase(it.bounces)
+                    saveBounceLocationInDatabase(it.bounces, it.id_trainingResult)
                 }
             }
 
@@ -91,7 +91,7 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>) {
+    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>, id_trainingResult : Int) {
         val title = trainingPositionAleatoryTrainingFragment.text
 
         if(title != null && title.isNotEmpty()) {
@@ -101,14 +101,12 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
             try {
                 realm.executeTransaction { realm ->
                     // Add a Training
-                    val trainingResult = realm.createObject<TrainingResult>()
-                    trainingResult.id = nextId()
-                    trainingResult.title = trainingTitle
-                    trainingResult.shots = this!!.saveShots!!
-                    trainingResult.dateTrainingResult = Date()
+                    var trainingResult = realm.where<TrainingResult>().equalTo("id", id_trainingResult).findFirst()
 
                     for(bounce in bounces){
-                        trainingResult.bouncesLocations.add(bounce)
+                        if (trainingResult != null) {
+                            trainingResult.bouncesLocations.add(bounce)
+                        }
                     }
                     activity.onBackPressed()
                 }
@@ -152,8 +150,24 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         val ip : String = activity.intent.extras.getString("IP")
         val mac : String = activity.intent.extras.getString("MAC")
 
+        var realm = Realm.getDefaultInstance()
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(trainingTitle, it+1, shots!!, ip, mac) }
+
+        try {
+            realm.executeTransaction { realm ->
+                // Add a Training
+                val trainingResult = realm.createObject<TrainingResult>()
+                trainingResult.title = trainingTitle
+                trainingResult.id = nextId()
+                trainingResult.shots = training.shots
+                trainingResult.dateTrainingResult = Date()
+            }
+        } catch (e: Exception) {
+            Log.d("Erro", e.message)
+        }
+
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(1, it+1, shots!!, ip, mac) }
 
         return trainingDataApi
     }
