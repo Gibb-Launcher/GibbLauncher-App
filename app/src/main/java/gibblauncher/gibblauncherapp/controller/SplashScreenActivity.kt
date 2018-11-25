@@ -19,9 +19,6 @@ import gibblauncher.gibblauncherapp.helper.NotificationService
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val GIBBlAUNCHER_NETWORK : String = "- (Logtel-40639001)"
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
@@ -67,7 +64,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         val currentConnectedSSID = wifiInfo.ssid.replace("\"", "")
         val currentConnetedBSSID = wifiInfo.bssid
-        return currentConnectedSSID == GIBBlAUNCHER_NETWORK && currentConnetedBSSID != null
+        return currentConnectedSSID == WifiConnectActivity.GIBBlAUNCHER_NETWORK && currentConnetedBSSID != null
     }
 
     private fun changeActivity (){

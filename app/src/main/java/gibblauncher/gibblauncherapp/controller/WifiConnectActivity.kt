@@ -21,7 +21,9 @@ import java.util.*
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
-        private val GIBBlAUNCHER_NETWORK : String = "- (Logtel-40639001)"
+        companion object {
+            val GIBBlAUNCHER_NETWORK : String = "GibbLauncher"
+        }
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
         private lateinit var key: String
