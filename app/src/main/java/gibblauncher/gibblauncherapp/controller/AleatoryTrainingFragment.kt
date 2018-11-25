@@ -53,16 +53,8 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun takeTrainingInDatabase(trainingTitle: String): Training {
+        realm = Realm.getDefaultInstance()
 
-        try {
-            Realm.init(context)
-            val config = RealmConfiguration.Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
-            realm = Realm.getInstance(config)
-        } catch (ex: RealmMigrationNeededException) {
-            realm = Realm.getDefaultInstance()
-        }
 
         val results = realm.where<Training>().`in`("title", arrayOf(trainingTitle)).findFirst()
 

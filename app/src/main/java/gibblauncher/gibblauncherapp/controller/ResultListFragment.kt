@@ -69,16 +69,8 @@ class ResultListFragment : Fragment() {
     }
 
     private fun takeResultsInDatabase(): List<TrainingResult> {
-        var realm:Realm? = null
-        try {
-            Realm.init(context)
-            val config = RealmConfiguration.Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
-            realm = Realm.getInstance(config)
-        } catch (ex: RealmMigrationNeededException) {
-            realm = Realm.getDefaultInstance()
-        }
+        var realm = Realm.getDefaultInstance()
+
 
 
         val listTraining = realm?.where<TrainingResult>()?.findAll()

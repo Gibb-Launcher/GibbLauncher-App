@@ -68,16 +68,8 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
         if(title != null && title.isNotEmpty()) {
             // Open the realm for the UI thread.
-            var realm:Realm? = null
-            try {
-                Realm.init(context)
-                val config = RealmConfiguration.Builder()
-                        .deleteRealmIfMigrationNeeded()
-                        .build()
-                realm = Realm.getInstance(config)
-            } catch (ex: RealmMigrationNeededException) {
-                realm = Realm.getDefaultInstance()
-            }
+            var realm = Realm.getDefaultInstance()
+
 
             try {
                 realm!!.executeTransaction { realm ->

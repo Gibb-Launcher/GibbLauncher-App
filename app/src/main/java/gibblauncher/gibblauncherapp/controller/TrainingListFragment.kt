@@ -94,17 +94,7 @@ class TrainingListFragment : Fragment() {
     }
 
     private fun trainings(): List<Training> {
-        var realm:Realm? = null
-        try {
-            Realm.init(context)
-            val config = RealmConfiguration.Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
-            realm = Realm.getInstance(config)
-        } catch (ex: RealmMigrationNeededException) {
-            realm = Realm.getDefaultInstance()
-        }
-
+        var realm = Realm.getDefaultInstance()
 
         val results = realm?.where<Training>()?.findAll()?.toArray()
 

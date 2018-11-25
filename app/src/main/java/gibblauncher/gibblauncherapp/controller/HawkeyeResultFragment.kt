@@ -193,17 +193,8 @@ class HawkeyeResultFragment : Fragment(){
 
     private fun takeResultsInDatabase(): TrainingResult {
 
-        var realm: Realm
+        var realm = Realm.getDefaultInstance()
 
-        try {
-            Realm.init(context)
-            val config = RealmConfiguration.Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
-            realm = Realm.getInstance(config)
-        } catch (ex: RealmMigrationNeededException) {
-            realm = Realm.getDefaultInstance()
-        }
 
         return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!
     }

@@ -50,15 +50,8 @@ class StatisticFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        try {
-            Realm.init(context)
-            val config = RealmConfiguration.Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
-            realm = Realm.getInstance(config)
-        } catch (ex: RealmMigrationNeededException) {
-            realm = Realm.getDefaultInstance()
-        }
+        realm = Realm.getDefaultInstance()
+
 
 
         listTrainingResults = realm.where<TrainingResult>().findAll()

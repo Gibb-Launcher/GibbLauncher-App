@@ -83,15 +83,8 @@ class TrainingFragment : Fragment(), View.OnClickListener {
 
         if(title != null && title.isNotEmpty()) {
             // Open the realm for the UI thread.
-            try {
-                Realm.init(context)
-                val config = RealmConfiguration.Builder()
-                        .deleteRealmIfMigrationNeeded()
-                        .build()
-                realm = Realm.getInstance(config)
-            } catch (ex: RealmMigrationNeededException) {
-                realm = Realm.getDefaultInstance()
-            }
+            var realm = Realm.getDefaultInstance()
+
 
             try {
                 realm.executeTransaction { realm ->
@@ -191,16 +184,8 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun takeTrainingInDatabase(trainingTitle: String): Training {
-        var realm:Realm? = null
-        try {
-            Realm.init(context)
-            val config = RealmConfiguration.Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
-            realm = Realm.getInstance(config)
-        } catch (ex: RealmMigrationNeededException) {
-            realm = Realm.getDefaultInstance()
-        }
+        var realm = Realm.getDefaultInstance()
+
         val results = realm!!.where<Training>().`in`("title", arrayOf(trainingTitle)).findFirst()
 
         return results as Training
