@@ -6,16 +6,18 @@ import android.content.Intent
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.os.Bundle
+import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import gibblauncher.gibblauncherapp.R
+import gibblauncher.gibblauncherapp.helper.NotificationService
 import java.lang.Thread.sleep
 import java.net.NetworkInterface
 import java.util.*
+
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
@@ -38,7 +40,12 @@ class WifiConnectActivity : AppCompatActivity() {
 
         btQrcode.setOnClickListener { openQRCode() }
 
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
     }
+
+
+
 
     private fun connectToWPAWiFi(ssid:String, pass:String){
         val wm:WifiManager= applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -80,6 +87,7 @@ class WifiConnectActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int,resultCode: Int, data: Intent?) {
+
         var result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if(result != null){
             if(result.contents != null){
@@ -171,4 +179,7 @@ class WifiConnectActivity : AppCompatActivity() {
         return "02:00:00:00:00:00"
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
 }

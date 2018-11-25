@@ -11,23 +11,23 @@ import android.net.wifi.WifiManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
-import com.github.mikephil.charting.utils.Utils
 import java.net.NetworkInterface
-import java.net.NetworkInterface.getNetworkInterfaces
 import java.util.*
-import kotlin.experimental.and
+import android.widget.Toast
+import gibblauncher.gibblauncherapp.helper.NotificationService
 
 
 class SplashScreenActivity : AppCompatActivity() {
 
-
     private val GIBBlAUNCHER_NETWORK : String = "- (Logtel-40639001)"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         checkPermition()
-
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -127,4 +127,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         return "02:00:00:00:00:00"
     }
+
+    fun Context.toast(message: CharSequence) =
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

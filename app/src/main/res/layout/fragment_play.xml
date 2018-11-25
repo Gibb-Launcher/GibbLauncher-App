@@ -23,28 +23,29 @@
 
             <ImageView
                 android:id="@+id/imageViewFragmentPlayLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="5dp"
                 android:visibility="invisible"
-                android:src="@mipmap/ic_launcher_round" />
+                android:src="@drawable/logol" />
 
             <ImageView
+
                 android:id="@+id/imageViewFragmentPlayCenter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/ic_launcher_round" />
+                android:src="@drawable/logol" />
 
             <ImageView
                 android:id="@+id/imageViewFragmentPlayRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="5dp"
                 android:visibility="invisible"
-                android:src="@mipmap/ic_launcher_round" />
+                android:src="@drawable/logol" />
 
         </RelativeLayout>
 
