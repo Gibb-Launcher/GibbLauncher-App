@@ -6,18 +6,24 @@ import android.content.Intent
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.os.Bundle
+import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import gibblauncher.gibblauncherapp.R
+import gibblauncher.gibblauncherapp.helper.NotificationService
 import java.lang.Thread.sleep
+import java.net.NetworkInterface
+import java.util.*
+
 
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
-        private val GIBBlAUNCHER_NETWORK : String = "Softway-2.4"
+        companion object {
+            val GIBBlAUNCHER_NETWORK : String = "GibbLauncher"
+        }
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null
         private lateinit var key: String
@@ -36,7 +42,12 @@ class WifiConnectActivity : AppCompatActivity() {
 
         btQrcode.setOnClickListener { openQRCode() }
 
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
     }
+
+
+
 
     private fun connectToWPAWiFi(ssid:String, pass:String){
         val wm:WifiManager= applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -78,6 +89,7 @@ class WifiConnectActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int,resultCode: Int, data: Intent?) {
+
         var result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if(result != null){
             if(result.contents != null){
@@ -122,7 +134,9 @@ class WifiConnectActivity : AppCompatActivity() {
         if(isConnectedGibbNetwork){
             intent = Intent(this, MainActivity::class.java)
             val ip = getIP(wifiManager)
+            val mac = getMAC(wifiManager)
             intent.putExtra("IP", ip)
+            intent.putExtra("MAC", mac)
             finish()
             startActivity(intent)
 
@@ -135,5 +149,39 @@ class WifiConnectActivity : AppCompatActivity() {
         val ipAddress = wifiManager.connectionInfo.ipAddress
         val ip = String.format("%d.%d.%d.%d", ipAddress and 0xff, ipAddress shr 8 and 0xff, ipAddress shr 16 and 0xff, ipAddress shr 24 and 0xff)
         return ip
+    }
+
+    private fun getMAC(wifiManager: WifiManager) : String {
+        try {
+            val all = Collections.list(NetworkInterface.getNetworkInterfaces())
+            for (nif in all) {
+                if (!nif.getName().equals("wlan0", ignoreCase = true)) continue
+
+                val macBytes = nif.getHardwareAddress() ?: return ""
+
+                Log.d("MAC", macBytes.toString())
+
+
+                val res1 = StringBuilder()
+                for (b in macBytes) {
+                    // res1.append(Integer.toHexString(b & 0xFF) + ":");
+                    res1.append(String.format("%02X:", b))
+                }
+                Log.d("MAC2 ", res1.toString())
+
+
+                if (res1.length > 0) {
+                    res1.deleteCharAt(res1.length - 1)
+                }
+                return res1.toString()
+            }
+        } catch (ex: Exception) {
+        }
+
+        return "02:00:00:00:00:00"
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 }

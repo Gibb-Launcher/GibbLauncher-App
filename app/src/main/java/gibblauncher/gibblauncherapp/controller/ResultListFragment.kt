@@ -7,11 +7,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_result_list.*
+import io.realm.exceptions.RealmMigrationNeededException
+
+
 
 class ResultListFragment : Fragment() {
 
@@ -39,7 +44,11 @@ class ResultListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         (recyclerView.adapter as ResultListAdapter).onItemClick = { result ->
-           openHawkeyeResultFragment(result)
+           if(result.bouncesLocations.size > 0){
+               openHawkeyeResultFragment(result)
+           } else {
+               Toast.makeText(context, "Análise do treino está em sendo realizada, por favor aguarde.", Toast.LENGTH_LONG).show()
+           }
         }
     }
 
@@ -61,13 +70,17 @@ class ResultListFragment : Fragment() {
         val handler = Handler()
         handler.postDelayed(Runnable {
             hawkeyeResultFragment.displayBalls()
-        },1000)
+        },100)
     }
 
     private fun takeResultsInDatabase(): List<TrainingResult> {
-        val realm = Realm.getDefaultInstance()
+        var realm = Realm.getDefaultInstance()
 
-        return realm.where<TrainingResult>().findAll()
+
+
+        val listTraining = realm?.where<TrainingResult>()?.findAll()
+
+        return listTraining!!.reversed()
     }
 
 }

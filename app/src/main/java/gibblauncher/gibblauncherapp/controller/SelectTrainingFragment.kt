@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,8 @@ import android.widget.Toast
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.Training
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
@@ -52,14 +55,11 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
         saveTrainingInDatabase()
 
         context.toast("Treino salvo com sucesso!")
-
-        var trainingListFragment = TrainingListFragment()
-
-        fragmentManager.popBackStack()
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, trainingListFragment)
+                .replace(R.id.main_container, BlankFragment())
                 .commit()
+        activity.onBackPressed()
     }
 
 
@@ -68,10 +68,11 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
         if(title != null && title.isNotEmpty()) {
             // Open the realm for the UI thread.
-            realm = Realm.getDefaultInstance()
+            var realm = Realm.getDefaultInstance()
+
 
             try {
-                realm.executeTransaction { realm ->
+                realm!!.executeTransaction { realm ->
                     // Add a Training
                     val training = realm.createObject<Training>(title.toString())
                     training.launcherPosition = position
@@ -106,9 +107,9 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
 
     private fun filteringShots() {
         when(position) {
-            0 -> myShoots = arrayOf("Direita", "Centro")
-            1 -> myShoots = arrayOf("Esquerda", "Centro", "Direita")
-            2 -> myShoots = arrayOf("Esquerda", "Centro")
+            2 -> myShoots = arrayOf("Forehand Cruzado - Longo", "Backhand Cruzado - Centro", "Backhand Paralelo - Longo", "Forehand Cruzado - Curto", "Backhand Paralelo - Curto")
+            1 -> myShoots = arrayOf("Forehand Cruzado - Longo", "Backhand Paralelo - Centro", "Backhand Cruzado - Longo", "Forehand Cruzado - Curto", "Backhand Cruzado - Curto")
+            0 -> myShoots = arrayOf("Forehand Paralelo - Longo", "Backhand Cruzado - Centro", "Backhand Cruzado - Longo", "Forehand Paralelo - Curto", "Backhand Cruzado - Curto")
         }
     }
 
@@ -136,6 +137,30 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
         spinnerTrainingEight.isEnabled = change
         spinnerTrainingNine.isEnabled = change
         spinnerTrainingTen.isEnabled = change
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (view == null) {
+            return
+        }
+
+        view!!.isFocusableInTouchMode = true
+        view!!.requestFocus()
+        view!!.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+
+                return if (event.action === KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.main_container, BlankFragment())
+                            .commit()
+                    activity.onBackPressed()
+                    true
+                } else false
+            }
+        })
     }
 
     fun Context.toast(message: CharSequence) =

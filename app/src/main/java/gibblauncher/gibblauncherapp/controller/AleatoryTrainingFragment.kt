@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,9 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.helper.RetrofitInitializer
 import gibblauncher.gibblauncherapp.model.*
 import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmList
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.fragment_aleatory_training.*
@@ -28,6 +32,7 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
     private var training = Training()
     private lateinit var realm: Realm
     private var trainingTitle: String? = null
+    private var saveShots: RealmList<String> = RealmList()
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -49,7 +54,9 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun takeTrainingInDatabase(trainingTitle: String): Training {
-        val realm = Realm.getDefaultInstance()
+        realm = Realm.getDefaultInstance()
+
+
         val results = realm.where<Training>().`in`("title", arrayOf(trainingTitle)).findFirst()
 
         return results as Training
@@ -66,26 +73,33 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         val dialog = progressDialogChanges()
 
         val call = trainingData()?.let { RetrofitInitializer().apiService().post(it) }
-        call!!.enqueue(object: Callback<Bounces?> {
-            override fun onResponse(call: Call<Bounces?>?,
-                                    response: Response<Bounces?>?) {
-                dialog.dismiss()
+        call!!.enqueue(object: Callback<String> {
+            override fun onResponse(call: Call<String>?,
+                                    response: Response<String>?) {
 
                 response?.body()?.let {
-                    saveBounceLocationInDatabase(it.bounces)
+
+                    if(it.equals("Ok")){
+                        createAlertDialog("Treino realizado com sucesso!")
+                    } else if(it.equals("Fail")) {
+                        createAlertDialog("Outro jogador já está conectado no Lançador!")
+                    }
+                    dialog.dismiss()
                 }
+
+
             }
 
-            override fun onFailure(call: Call<Bounces?>?,
+            override fun onFailure(call: Call<String>?,
                                    t: Throwable?) {
                 dialog.dismiss()
 
-                Log.d("Response", t?.message)
+                Toast.makeText(context, "Erro na conexão com o lançador!", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>) {
+    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>, id_trainingResult : Int) {
         val title = trainingPositionAleatoryTrainingFragment.text
 
         if(title != null && title.isNotEmpty()) {
@@ -95,14 +109,14 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
             try {
                 realm.executeTransaction { realm ->
                     // Add a Training
-                    val trainingResult = realm.createObject<TrainingResult>()
-                    trainingResult.id = nextId()
-                    trainingResult.title = trainingTitle
-                    trainingResult.dateTrainingResult = Date()
+                    var trainingResult = realm.where<TrainingResult>().equalTo("id", id_trainingResult).findFirst()
 
                     for(bounce in bounces){
-                        trainingResult.bouncesLocations.add(bounce)
+                        if (trainingResult != null) {
+                            trainingResult.bouncesLocations.add(bounce)
+                        }
                     }
+                    activity.onBackPressed()
                 }
             } catch (e: Exception) {
                 Log.d("Erro", e.message)
@@ -112,6 +126,18 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         } else {
             Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun createAlertDialog(message: String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setMessage(message)
+        builder.setTitle("")
+        builder.setPositiveButton("OK") { _,_ ->
+
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun nextId(): Int {
@@ -127,8 +153,6 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun trainingData(): TrainingDataApi? {
-        // TODO - fazer lógica pra pegar o ID no banco e incrementar
-        val id = "IdAleatorio"
         val launcherPosition = parseLauncherPositionString(trainingPositionAleatoryTrainingFragment.text.toString())
         val shots = listOf(training.possibleShots[(0 until training.possibleShots.size).random()],
                 training.possibleShots[(0 until training.possibleShots.size).random()],
@@ -141,10 +165,29 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
                 training.possibleShots[(0 until training.possibleShots.size).random()],
                 training.possibleShots[(0 until training.possibleShots.size).random()])
 
+        saveShots!!.addAll(shots)
 
-            val ip : String = activity.intent.extras.getString("IP")
+        val ip : String = activity.intent.extras.getString("IP")
+        val mac : String = activity.intent.extras.getString("MAC")
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id, it, shots, ip) }
+        var realm = Realm.getDefaultInstance()
+        val id_trainingResult = nextId()
+
+        try {
+            realm.executeTransaction { realm ->
+                // Add a Training
+                val trainingResult = realm.createObject<TrainingResult>()
+                trainingResult.title = trainingTitle
+                trainingResult.id = id_trainingResult
+                trainingResult.shots = training.shots
+                trainingResult.dateTrainingResult = Date()
+            }
+        } catch (e: Exception) {
+            Log.d("Erro", e.message)
+        }
+
+
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id_trainingResult, it+1, shots!!, ip, mac) }
 
         return trainingDataApi
     }
@@ -196,8 +239,4 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
 
         return launcherPositionString
     }
-
-    fun Context.toast(message: CharSequence) =
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
 }

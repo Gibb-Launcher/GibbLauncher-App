@@ -16,13 +16,18 @@ import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.BounceLocation
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.RealmList
+import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.kotlin.where
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class HawkeyeResultFragment : Fragment(){
+    private var finish = false
     private var screenWidth = 0
     private var screenHeight = 0
     private var isShow: Boolean = false
@@ -33,7 +38,8 @@ class HawkeyeResultFragment : Fragment(){
     fun displayBalls(){
         if (!isShow) {
             val hawkeyeLayout = view?.findViewById<RelativeLayout>(R.id.hawkeye_result)
-
+            idTrainingResult = arguments.getInt("id")
+            showHeader()
             showBounceLocations(hawkeyeLayout)
             this.isShow = true
         }
@@ -52,9 +58,25 @@ class HawkeyeResultFragment : Fragment(){
         return inflater.inflate(R.layout.fragment_hawkeye_result, container, false)
     }
 
+    private fun showHeader() {
+        var result = takeResultsInDatabase()
+        name_training.text = result.title
+        hour_hawkeye.text = formatHour(result.dateTrainingResult!!)
+        date_training.text = formatDate(result.dateTrainingResult!!)
+    }
+
+    private  fun formatDate(date : Date) : String{
+        val dateFormat = SimpleDateFormat("dd MMM yyyy")
+        return dateFormat.format(date)
+    }
+
+    private  fun formatHour(date : Date) : String{
+        val dateFormat = SimpleDateFormat("HH:mm:ss")
+        return dateFormat.format(date)
+    }
+
     private fun showBounceLocations(hawkeyeLayout: RelativeLayout?) {
-        idTrainingResult = arguments.getInt("id")
-        val listOfBounceLocation: MutableList<BounceLocation> = takeResultsInDatabase()
+        val listOfBounceLocation: MutableList<BounceLocation> = takeResultsInDatabase().bouncesLocations
 
         for ((index, bounceLocation) in listOfBounceLocation.withIndex()) {
             if (bounceLocation.x!! >= 0 && bounceLocation.y!! >= 0) {
@@ -91,7 +113,7 @@ class HawkeyeResultFragment : Fragment(){
 
                     bounceIn?.text = bouncesIn.toString()
                     percent?.text = "%.2f".format(percentIn) + "%"
-                },index * 1000L + 1000L)
+                },0)
             } else{
                 bounceLocationOut.add(bounceLocation)
                 val handler = Handler()
@@ -106,7 +128,7 @@ class HawkeyeResultFragment : Fragment(){
 
                     bounceout?.text = bouncesOut.toString()
                     percent?.text = "%.2f".format(percentIn) + "%"
-                },index * 1000L + 1000L)
+                },0)
             }
         }
     }
@@ -127,8 +149,9 @@ class HawkeyeResultFragment : Fragment(){
                 imageView.x, y)
 
         ObjectAnimator.ofFloat(imageView, View.X, View.Y, path).apply {
-            duration = 1000
-            startDelay = 1000L * index
+            finish = true
+            duration = 0
+            startDelay = 0L
             start()
         }
     }
@@ -159,7 +182,7 @@ class HawkeyeResultFragment : Fragment(){
 
         Handler().postDelayed({
             hawkeyeLayout?.removeView(toolTip)
-        }, 1000L)
+        }, 0)
     }
 
     private fun createBounceLocations(): MutableList<BounceLocation> {
@@ -168,10 +191,12 @@ class HawkeyeResultFragment : Fragment(){
         return listOfBounceLocation
     }
 
-    private fun takeResultsInDatabase(): RealmList<BounceLocation> {
-        val realm = Realm.getDefaultInstance()
+    private fun takeResultsInDatabase(): TrainingResult {
 
-        return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!.bouncesLocations
+        var realm = Realm.getDefaultInstance()
+
+
+        return realm.where<TrainingResult>().equalTo("id", idTrainingResult).findFirst()!!
     }
 
     private fun getScreenMetrics() {
@@ -180,6 +205,27 @@ class HawkeyeResultFragment : Fragment(){
 
         screenWidth = displayMetrics.widthPixels
         screenHeight = displayMetrics.heightPixels
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (view == null) {
+            return
+        }
+
+        view!!.isFocusableInTouchMode = true
+        view!!.requestFocus()
+        view!!.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+
+                return if (event.action === KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    activity.onBackPressed()
+
+                    true
+                } else false
+            }
+        })
     }
 
 }

@@ -57,7 +57,6 @@ class PlayFragment : Fragment(), SeekBar.OnSeekBarChangeListener, View.OnClickLi
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.main_container, selectTrainingFragment)
-                .addToBackStack(null)
                 .commit()
     }
 

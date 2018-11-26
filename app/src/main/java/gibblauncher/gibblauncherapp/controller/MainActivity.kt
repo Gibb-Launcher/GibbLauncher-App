@@ -1,5 +1,6 @@
 package gibblauncher.gibblauncherapp.controller
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +8,7 @@ import gibblauncher.gibblauncherapp.R
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import gibblauncher.gibblauncherapp.helper.NotificationService
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").commit()
         fm.beginTransaction().add(R.id.main_container, fragment1, "1").hide(fragment1).commit()
 
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
     }
 
 
@@ -87,12 +91,6 @@ class MainActivity : AppCompatActivity() {
                             .show(fragment3)
                             .commit()
                     active = fragment3
-                    /*
-                    val handler = Handler()
-                    handler.postDelayed(Runnable {
-                        fragment3.displayBalls()
-                    },1000)
-                    */
                     return true
                 }
             }
@@ -105,8 +103,10 @@ class MainActivity : AppCompatActivity() {
         val realmConfig = RealmConfiguration.Builder()
                 .name("gibblauncher.realm")
                 .schemaVersion(0)
+                .deleteRealmIfMigrationNeeded()
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
 
     }
+
 }
