@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import gibblauncher.gibblauncherapp.R
 import gibblauncher.gibblauncherapp.model.TrainingResult
 import io.realm.Realm
@@ -43,7 +44,11 @@ class ResultListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         (recyclerView.adapter as ResultListAdapter).onItemClick = { result ->
-           openHawkeyeResultFragment(result)
+           if(result.bouncesLocations.size > 0){
+               openHawkeyeResultFragment(result)
+           } else {
+               Toast.makeText(context, "Análise do treino está em sendo realizada, por favor aguarde.", Toast.LENGTH_LONG).show()
+           }
         }
     }
 
