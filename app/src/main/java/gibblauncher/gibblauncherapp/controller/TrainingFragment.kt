@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -58,18 +59,22 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         val dialog = progressDialogChanges()
 
         val call = trainingData()?.let { RetrofitInitializer().apiService().post(it) }
-        call!!.enqueue(object: Callback<Bounces?> {
-            override fun onResponse(call: Call<Bounces?>?,
-                                    response: Response<Bounces?>?) {
-                dialog.dismiss()
+        call!!.enqueue(object: Callback<String> {
+            override fun onResponse(call: Call<String>?,
+                                    response: Response<String>?) {
 
                 response?.body()?.let {
 
-                    saveBounceLocationInDatabase(it.bounces, it.id_trainingResult)
+                    if(it.equals("Ok")){
+                        createAlertDialog("Treino realizado com sucesso!")
+                    } else if(it.equals("Fail")) {
+                        createAlertDialog("Houve um erro na conexão com o lançador!")
+                    }
+                    dialog.dismiss()
                 }
             }
 
-            override fun onFailure(call: Call<Bounces?>?,
+            override fun onFailure(call: Call<String>?,
                                    t: Throwable?) {
                 dialog.dismiss()
 
@@ -161,17 +166,15 @@ class TrainingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun progressDialogChanges(): ProgressDialog {
-        var dialog = createDialog("Enviando informações para o lançador!")
+        var dialog = createProgressDialog("Enviando informações para o lançador!")
 
         val handler = Handler()
-        handler.postDelayed({ dialog.setMessage("Iniciando treinamento!") }, 1000)
-        handler.postDelayed({ dialog.setMessage("Analizando jogadas!") }, 1000)
-
+        handler.postDelayed({ dialog.setMessage("Iniciando treinamento!") }, 1500)
 
         return dialog
     }
 
-    private fun createDialog(message: String): ProgressDialog {
+    private fun createProgressDialog(message: String): ProgressDialog {
         val dialog = ProgressDialog(context)
         dialog.setMessage(message)
         dialog.setTitle("")
@@ -180,6 +183,18 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         dialog.show()
 
         return dialog
+    }
+
+    private fun createAlertDialog(message: String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setMessage(message)
+        builder.setTitle("")
+        builder.setPositiveButton("OK") { _,_ ->
+            
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun initializeTrainingData(trainingTitle: String) {

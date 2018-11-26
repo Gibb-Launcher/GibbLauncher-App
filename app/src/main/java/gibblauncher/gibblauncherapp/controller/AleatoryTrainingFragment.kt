@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -72,17 +73,24 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         val dialog = progressDialogChanges()
 
         val call = trainingData()?.let { RetrofitInitializer().apiService().post(it) }
-        call!!.enqueue(object: Callback<Bounces?> {
-            override fun onResponse(call: Call<Bounces?>?,
-                                    response: Response<Bounces?>?) {
-                dialog.dismiss()
+        call!!.enqueue(object: Callback<String> {
+            override fun onResponse(call: Call<String>?,
+                                    response: Response<String>?) {
 
                 response?.body()?.let {
-                    saveBounceLocationInDatabase(it.bounces, it.id_trainingResult)
+
+                    if(it.equals("Ok")){
+                        createAlertDialog("Treino realizado com sucesso!")
+                    } else if(it.equals("Fail")) {
+                        createAlertDialog("Outro jogador já está conectado no Lançador!")
+                    }
+                    dialog.dismiss()
                 }
+
+
             }
 
-            override fun onFailure(call: Call<Bounces?>?,
+            override fun onFailure(call: Call<String>?,
                                    t: Throwable?) {
                 dialog.dismiss()
 
@@ -118,6 +126,18 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         } else {
             Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun createAlertDialog(message: String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setMessage(message)
+        builder.setTitle("")
+        builder.setPositiveButton("OK") { _,_ ->
+
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun nextId(): Int {
