@@ -83,34 +83,6 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>, id_trainingResult : Int) {
-        val title = trainingPositionTrainingFragment.text
-
-        if(title != null && title.isNotEmpty()) {
-            // Open the realm for the UI thread.
-            var realm = Realm.getDefaultInstance()
-
-
-            try {
-                realm.executeTransaction { realm ->
-                    // Add a Training
-                    var trainingResult = realm.where<TrainingResult>().equalTo("id", id_trainingResult).findFirst()
-
-                    for(bounce in bounces){
-                        if (trainingResult != null) {
-                            trainingResult.bouncesLocations.add(bounce)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Log.d("Erro", e.message)
-            }
-
-        } else {
-            Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
-        }
-    }
-
     private fun nextId(): Int {
         realm = Realm.getDefaultInstance()
         val currentIdNum = realm.where(TrainingResult::class.java).max("id")

@@ -99,35 +99,6 @@ class AleatoryTrainingFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun saveBounceLocationInDatabase(bounces : List<BounceLocation>, id_trainingResult : Int) {
-        val title = trainingPositionAleatoryTrainingFragment.text
-
-        if(title != null && title.isNotEmpty()) {
-            // Open the realm for the UI thread.
-            realm = Realm.getDefaultInstance()
-
-            try {
-                realm.executeTransaction { realm ->
-                    // Add a Training
-                    var trainingResult = realm.where<TrainingResult>().equalTo("id", id_trainingResult).findFirst()
-
-                    for(bounce in bounces){
-                        if (trainingResult != null) {
-                            trainingResult.bouncesLocations.add(bounce)
-                        }
-                    }
-                    activity.onBackPressed()
-                }
-            } catch (e: Exception) {
-                Log.d("Erro", e.message)
-            }
-
-
-        } else {
-            Toast.makeText(context, "Erro ao salvar locais onde a bolinha pingou", Toast.LENGTH_LONG).show()
-        }
-    }
-
     private fun createAlertDialog(message: String) {
         val builder = AlertDialog.Builder(context)
         builder.setMessage(message)
