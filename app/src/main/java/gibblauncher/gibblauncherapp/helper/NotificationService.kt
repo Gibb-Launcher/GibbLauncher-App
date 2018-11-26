@@ -92,6 +92,7 @@ class NotificationService : IntentService("NotificationService") {
                 notificationManager.notify(cont, notificationBuilder.build())
                 cont++
             })
+        //TODO get training result from api
     }
 
 
