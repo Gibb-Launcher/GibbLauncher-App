@@ -139,14 +139,14 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         val mac : String = activity.intent.extras.getString("MAC")
 
         var realm = Realm.getDefaultInstance()
-
+        val id_trainingResult = nextId()
 
         try {
             realm.executeTransaction { realm ->
                 // Add a Training
                 val trainingResult = realm.createObject<TrainingResult>()
                 trainingResult.title = trainingTitle
-                trainingResult.id = nextId()
+                trainingResult.id = id_trainingResult
                 trainingResult.shots = training.shots
                 trainingResult.dateTrainingResult = Date()
             }
@@ -155,7 +155,7 @@ class TrainingFragment : Fragment(), View.OnClickListener {
         }
 
 
-        var trainingDataApi = launcherPosition?.let { TrainingDataApi(1, it+1, shots, ip, mac) }
+        var trainingDataApi = launcherPosition?.let { TrainingDataApi(id_trainingResult, it+1, shots, ip, mac) }
 
         return trainingDataApi
     }
