@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -142,11 +143,17 @@ class HawkeyeResultFragment : Fragment(){
         val marginParams = header?.layoutParams as ViewGroup.MarginLayoutParams
         val y = bounceLocation.y!! + header.y + header.height + marginParams.bottomMargin
 
+
+
         val sideCurve = if (index % 2 == 0) -1 else 1
+
+        Log.d("NOOB", table_tennis.height.toString())
+        Log.d("NOOB", table_tennis.height.toString())
 
         path.cubicTo(imageView.x, screenHeight + 50.0f,
                 imageView.x + (300 * sideCurve), y + (screenHeight - y) / 2,
-                imageView.x, y)
+                (table_tennis.width * bounceLocation.x!!)/480 + table_tennis.x, (table_tennis.height * bounceLocation.y!!)/640 + table_tennis.y)
+
 
         ObjectAnimator.ofFloat(imageView, View.X, View.Y, path).apply {
             finish = true
