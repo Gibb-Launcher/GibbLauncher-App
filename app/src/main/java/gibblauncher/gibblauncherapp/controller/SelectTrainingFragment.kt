@@ -82,15 +82,15 @@ class SelectTrainingFragment : Fragment(), View.OnClickListener {
                         for(shot in myShoots) training.possibleShots.add(shot)
                     } else {
                         training.shots.add(spinnerTrainingOne.selectedItem.toString())
-                        training.shots.add(spinnerTrainingTwo.selectedItem.toString())
-                        training.shots.add(spinnerTrainingThree.selectedItem.toString())
-                        training.shots.add(spinnerTrainingFour.selectedItem.toString())
-                        training.shots.add(spinnerTrainingFive.selectedItem.toString())
-                        training.shots.add(spinnerTrainingSix.selectedItem.toString())
-                        training.shots.add(spinnerTrainingSeven.selectedItem.toString())
-                        training.shots.add(spinnerTrainingEight.selectedItem.toString())
-                        training.shots.add(spinnerTrainingNine.selectedItem.toString())
-                        training.shots.add(spinnerTrainingTen.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
+                        training.shots.add(spinnerTrainingOne.selectedItem.toString())
                     }
                 }
             } catch (e: RealmPrimaryKeyConstraintException) {

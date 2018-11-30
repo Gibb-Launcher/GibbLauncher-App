@@ -43,77 +43,6 @@
             android:prompt="@string/shot_prompt"
             android:layout_margin="10dp"/>
 
-        <Spinner
-            android:id="@+id/spinnerTrainingTwo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingThree"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingFour"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingFive"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingSix"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingSeven"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingEight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingNine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTrainingTen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/shot_arrays"
-            android:prompt="@string/shot_prompt"
-            android:layout_margin="10dp"/>
 
         <Button
             style="@style/Widget.AppCompat.Button.Colored"
@@ -123,5 +52,86 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="Salvar" />
+
+        <Spinner
+            android:id="@+id/spinnerTrainingTwo"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingThree"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingFour"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingFive"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingSix"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingSeven"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingEight"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingNine"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTrainingTen"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/shot_arrays"
+            android:prompt="@string/shot_prompt"
+            android:layout_margin="10dp"/>
     </LinearLayout>
 </ScrollView>
