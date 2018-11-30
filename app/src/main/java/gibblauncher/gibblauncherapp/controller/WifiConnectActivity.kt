@@ -22,7 +22,7 @@ import java.util.*
 class WifiConnectActivity : AppCompatActivity() {
         val TAG:String="WifiActivity";
         companion object {
-            val GIBBlAUNCHER_NETWORK : String = "Veloso"
+            val GIBBlAUNCHER_NETWORK : String = "GibbLauncher"
         }
         private var wc: WifiConfiguration = WifiConfiguration()
         private var wifi: WifiManager? = null

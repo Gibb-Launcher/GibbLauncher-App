@@ -23,6 +23,7 @@ import io.realm.exceptions.RealmMigrationNeededException
 import io.realm.kotlin.where
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_hawkeye_result.*
+import java.lang.Math.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -147,13 +148,22 @@ class HawkeyeResultFragment : Fragment(){
 
         val sideCurve = if (index % 2 == 0) -1 else 1
 
-        Log.d("NOOB", table_tennis.height.toString())
-        Log.d("NOOB", table_tennis.height.toString())
+        Log.d("NOOB", table_tennis.x.toString())
+        Log.d("NOOB1", table_tennis.y.toString())
+
+        var xis = (table_tennis.width *bounceLocation.x!!)/640
+        var ypson = table_tennis.y + (table_tennis.height *bounceLocation.y!!)/480
+
+
+        xis = abs((cos(90.0) * xis - sin(90.0) * ypson).toFloat())
+        ypson = abs((sin(90.0) * xis + cos(90.0) * ypson).toFloat())
+
+        Log.d("P", xis.toString())
+        Log.d("P", ypson.toString())
 
         path.cubicTo(imageView.x, screenHeight + 50.0f,
                 imageView.x + (300 * sideCurve), y + (screenHeight - y) / 2,
-                (table_tennis.width * bounceLocation.x!!)/480 + table_tennis.x, (table_tennis.height * bounceLocation.y!!)/640 + table_tennis.y)
-
+                (xis * bounceLocation.x!!)/640, (ypson * bounceLocation.y!!)/480)
 
         ObjectAnimator.ofFloat(imageView, View.X, View.Y, path).apply {
             finish = true
