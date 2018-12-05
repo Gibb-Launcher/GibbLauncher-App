@@ -148,22 +148,12 @@ class HawkeyeResultFragment : Fragment(){
 
         val sideCurve = if (index % 2 == 0) -1 else 1
 
-        Log.d("NOOB", table_tennis.x.toString())
-        Log.d("NOOB1", table_tennis.y.toString())
-
         var xis = (table_tennis.width *bounceLocation.x!!)/640
-        var ypson = table_tennis.y + (table_tennis.height *bounceLocation.y!!)/480
-
-
-        xis = abs((cos(90.0) * xis - sin(90.0) * ypson).toFloat())
-        ypson = abs((sin(90.0) * xis + cos(90.0) * ypson).toFloat())
-
-        Log.d("P", xis.toString())
-        Log.d("P", ypson.toString())
+        var ypson = (table_tennis.height *bounceLocation.y!!)/480
 
         path.cubicTo(imageView.x, screenHeight + 50.0f,
                 imageView.x + (300 * sideCurve), y + (screenHeight - y) / 2,
-                (xis * bounceLocation.x!!)/640, (ypson * bounceLocation.y!!)/480)
+                xis + table_tennis.x, ypson + header.y + header.height + marginParams.bottomMargin)
 
         ObjectAnimator.ofFloat(imageView, View.X, View.Y, path).apply {
             finish = true
@@ -171,6 +161,26 @@ class HawkeyeResultFragment : Fragment(){
             startDelay = 0L
             start()
         }
+    }
+
+    private fun rotate(angle : Double, ponto: Pair<Double, Double> ): Pair<Double, Double> {
+        var x = cos(angle) * ponto.first - sin(angle) * ponto.second
+        var y = sin(angle) * ponto.first + cos(angle) * ponto.second
+        var result: Pair<Double, Double> = Pair(first = x, second = y)
+        return result
+    }
+
+    private fun rotate2(angle: Double, ponto: Pair<Double, Double>, c : Pair<Double, Double>): Pair<Double, Double> {
+        var result = translate(ponto, -c.first, -c.second)
+        result = rotate(angle, result)
+        result = translate(result, c.first, c.second)
+
+        return result
+    }
+
+    private fun translate(ponto: Pair<Double, Double>, dx : Double, dy: Double): Pair<Double, Double>{
+        var result: Pair<Double, Double> = Pair(first = ponto.first + dx, second = ponto.second + dy)
+        return result
     }
 
     private fun showTipBounceLocation(index: Int, imageView: ImageView, hawkeyeLayout: RelativeLayout?) {
