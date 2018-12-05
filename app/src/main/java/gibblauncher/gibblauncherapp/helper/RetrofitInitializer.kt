@@ -14,7 +14,7 @@ class RetrofitInitializer {
             .build()
 
     private val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.4.13:5000/")
+            .baseUrl("http://192.168.4.1:5000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
